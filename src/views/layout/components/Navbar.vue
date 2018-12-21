@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <breadcrumb class="breadcrumb-container"/>
-    <!--<hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>-->
+    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <div class="right-menu">
       <el-tooltip content="全屏" effect="dark" placement="bottom">
         <screenfull class="screenfull right-menu-item"/>

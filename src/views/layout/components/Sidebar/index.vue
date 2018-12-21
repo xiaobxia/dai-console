@@ -1,7 +1,8 @@
 <template>
   <el-scrollbar wrap-class="scrollbar-wrapper">
-    <div class="logo-title">
-      <img src="../../../../assets/login_title.png" alt="">
+    <div :class="{'logo-title': true, close: isCollapse}">
+      <img v-if="isCollapse" src="../../../../assets/logo_app.png" alt="">
+      <img v-else src="../../../../assets/logo_title.png" alt="">
     </div>
     <el-menu
       :show-timeout="200"
@@ -46,6 +47,13 @@ export default {
       height: auto;
       width: 100%;
       vertical-align: middle;
+    }
+    &.close {
+      padding: 3px;
+      text-align: center;
+      img{
+        width: 30px;
+      }
     }
   }
 </style>

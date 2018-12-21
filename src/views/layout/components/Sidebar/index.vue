@@ -1,5 +1,8 @@
 <template>
   <el-scrollbar wrap-class="scrollbar-wrapper">
+    <div class="logo-title">
+      <img src="../../../../assets/login_title.png" alt="">
+    </div>
     <el-menu
       :show-timeout="200"
       :default-active="$route.path"
@@ -31,3 +34,18 @@ export default {
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .logo-title {
+    position: relative;
+    height: 50px;
+    background-color: #304156;
+    padding: 0 10px;
+    line-height: 50px;
+    img{
+      display: inline-block;
+      height: auto;
+      width: 100%;
+      vertical-align: middle;
+    }
+  }
+</style>

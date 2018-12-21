@@ -3,9 +3,6 @@
     <breadcrumb class="breadcrumb-container"/>
     <!--<hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>-->
     <div class="right-menu">
-      <div class="logo-title">
-        <img src="../../../assets/login_title.png" alt="">
-      </div>
       <el-tooltip content="全屏" effect="dark" placement="bottom">
         <screenfull class="screenfull right-menu-item"/>
       </el-tooltip>
@@ -66,17 +63,6 @@ export default {
   line-height: 50px;
   border-radius: 0px !important;
   border-bottom: 1px solid #eee;
-  .logo-title {
-    margin-right: 50px;
-    float: left;
-    display: inline-block;
-    height: 50px;
-    img{
-      height: 40px;
-      width: auto;
-      vertical-align: middle;
-    }
-  }
   .hamburger-container {
     line-height: 58px;
     height: 50px;

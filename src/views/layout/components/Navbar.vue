@@ -1,10 +1,11 @@
 <template>
   <div class="navbar">
-    <div class="logo-title">
-      <img src="../../../assets/login_title.png" alt="">
-    </div>
+    <breadcrumb class="breadcrumb-container"/>
     <!--<hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>-->
     <div class="right-menu">
+      <div class="logo-title">
+        <img src="../../../assets/login_title.png" alt="">
+      </div>
       <el-tooltip content="全屏" effect="dark" placement="bottom">
         <screenfull class="screenfull right-menu-item"/>
       </el-tooltip>
@@ -32,11 +33,13 @@
 import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
   components: {
     Hamburger,
-    Screenfull
+    Screenfull,
+    Breadcrumb
   },
   computed: {
     ...mapGetters([
@@ -64,7 +67,7 @@ export default {
   border-radius: 0px !important;
   border-bottom: 1px solid #eee;
   .logo-title {
-    padding-left: 10px;
+    margin-right: 50px;
     float: left;
     display: inline-block;
     height: 50px;

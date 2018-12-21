@@ -3,9 +3,6 @@
     <sidebar class="sidebar-container"/>
     <div class="main-container">
       <navbar/>
-      <div class="breadcrumb-wrap">
-        <breadcrumb class="breadcrumb-container"/>
-      </div>
       <!--<tags-view/>-->
       <app-main/>
     </div>
@@ -15,15 +12,13 @@
 <script>
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
   name: 'Layout',
   components: {
     Navbar,
     Sidebar,
-    AppMain,
-    Breadcrumb
+    AppMain
   },
   mixins: [ResizeMixin],
   computed: {

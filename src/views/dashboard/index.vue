@@ -1,8 +1,10 @@
 <template>
-  <div class="dashboard-container">
+  <div class="app-container">
     <el-alert
-      title="主页"
-      type="success"/>
+      :closable="false"
+      :title="title"
+      type="success"
+      description=""/>
   </div>
 </template>
 
@@ -13,6 +15,7 @@ export default {
   components: { },
   data() {
     return {
+      title: `欢迎来到${process.env.APP_NAME}`
     }
   },
   computed: {

@@ -35,7 +35,7 @@ export default {
       })
       const first = matched[0]
       if (first && first.name.trim().toLocaleLowerCase() !== 'Dashboard'.toLocaleLowerCase()) {
-        matched = [{ path: '/dashboard', meta: { title: 'dashboard' }}].concat(matched)
+        matched = [{ path: '/dashboard', meta: { title: '首页' }}].concat(matched)
       }
       this.levelList = matched
     },
@@ -59,9 +59,9 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .app-breadcrumb.el-breadcrumb {
-    display: inline-block;
+    display: block;
     font-size: 14px;
-    line-height: 50px;
+    line-height: 30px;
     margin-left: 10px;
     .no-redirect {
       color: #97a8be;

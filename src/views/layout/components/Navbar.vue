@@ -93,17 +93,18 @@ export default {
       padding: 0 20px;
       height: 50px;
       margin-right: 20px;
+      cursor: pointer;
       &:hover {
-        background-color: rgba(0,0,0,.025);
+        background-color: rgba(0,0,0,.03);
       }
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 0;
         position: relative;
-        height: 45px;
-        line-height: 45px;
+        height: 50px;
+        line-height: 50px;
         .user-avatar {
+          vertical-align: baseline;
           margin-right: 10px;
-          cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;

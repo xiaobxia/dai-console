@@ -149,7 +149,7 @@ export const asyncRouterMap = [
       {
         path: 'quota',
         component: () => import('@/views/user/quota/index'),
-        name: 'Quota',
+        name: 'userQuota',
         redirect: 'noredirect',
         meta: { title: '额度管理' },
         children: [
@@ -170,7 +170,7 @@ export const asyncRouterMap = [
       {
         path: 'interest',
         component: () => import('@/views/user/interest/index'),
-        name: 'Quota',
+        name: 'UserInterest',
         redirect: 'noredirect',
         meta: { title: '利息管理' },
         children: [
@@ -353,7 +353,7 @@ export const asyncRouterMap = [
       {
         path: 'thirdParty',
         component: () => import('@/views/risk/thirdParty'),
-        name: 'StatisticsMakeMoney',
+        name: 'RiskDecisionThirdParty',
         meta: { title: '第三方统计' }
       }
     ]

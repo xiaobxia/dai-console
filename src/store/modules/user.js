@@ -1,15 +1,14 @@
-import { getToken } from '@/utils/auth'
 import Http from '@/utils/httpUtil'
 import md5 from 'md5'
 import storageUtil from '@/utils/storageUtil'
 
+const userInfo = storageUtil.getUserInfo()
 const user = {
   state: {
-    user: '',
     status: '',
     code: '',
-    token: getToken(),
-    name: '',
+    token: userInfo.token,
+    name: userInfo.name,
     avatar: '',
     introduction: '',
     roles: [],
@@ -19,11 +18,11 @@ const user = {
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
+    SET_USER: (state, user) => {
+      state.name = user.name
     },
-    SET_TOKEN: (state, token) => {
-      state.token = token
+    RESET_USER: (state) => {
+      state.name = ''
     },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction
@@ -60,6 +59,7 @@ const user = {
           ...data.data,
           isLogin: true
         })
+        commit('SET_USER', data.data)
         return data.data
       })
     },
@@ -67,7 +67,7 @@ const user = {
     CheckLogin({ commit }, userInfo) {
     },
     // 登出
-    LogOut() {
+    LogOut({ commit }) {
       return Http.get('auth/logout', {
         token: localStorage.getItem('token'),
         platform: 'mobile'
@@ -76,6 +76,7 @@ const user = {
         storageUtil.initUserInfo({
           isLogin: false
         })
+        commit('RESET_USER')
       })
     }
   }

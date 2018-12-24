@@ -6,19 +6,14 @@
       <el-tooltip content="全屏" effect="dark" placement="bottom">
         <screenfull class="screenfull right-menu-item"/>
       </el-tooltip>
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+      <el-dropdown size="small" class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img src="../../../assets/头像.png" class="user-avatar">
-          <span>姓名</span>
+          <span>{{ name }}</span>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              主页
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出登录</span>
+          <el-dropdown-item>
+            <span style="display:block;" @click="logout"><i style="margin-right: 5px;" class="fas fa-sign-out-alt"/>退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -41,7 +36,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'device'
+      'device',
+      'name'
     ])
   },
   methods: {

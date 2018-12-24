@@ -1,11 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="operate-wrap">
-      <el-button type="primary">主要按钮</el-button>
+    <div class="filter-container">
+      <el-button class="filter-item" icon="el-icon-plus" type="primary">新增</el-button>
     </div>
-    <el-alert
-      title="主页"
-      type="success"/>
   </div>
 </template>
 

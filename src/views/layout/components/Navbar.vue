@@ -9,7 +9,7 @@
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img src="../../../assets/头像.png" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
+          <span>姓名</span>
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
@@ -82,7 +82,7 @@ export default {
     }
     .right-menu-item {
       display: inline-block;
-      margin: 0 8px;
+      margin: 0;
     }
     .screenfull {
       height: 20px;
@@ -94,23 +94,26 @@ export default {
       vertical-align: 15px;
     }
     .avatar-container {
+      padding: 0 20px;
       height: 50px;
-      margin-right: 30px;
+      margin-right: 20px;
+      &:hover {
+        background-color: rgba(0,0,0,.025);
+      }
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+        height: 45px;
+        line-height: 45px;
         .user-avatar {
+          margin-right: 10px;
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
         }
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+        span{
+          vertical-align: text-bottom;
         }
       }
     }

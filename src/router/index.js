@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
 
 /* Layout */
 import Layout from '@/views/layout/Layout'

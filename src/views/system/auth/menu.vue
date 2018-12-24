@@ -24,8 +24,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="170">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini">修改</el-button>
-          <el-button size="mini" type="danger">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,25 +71,50 @@ export default {
     }
   },
   created() {
-    this.listLoading = true
-    this.$http.get('/article/list').then((res) => {
-      this.listLoading = false
-      this.menuList = res.items
-      console.log(res)
-    }).catch(() => {
-      this.listLoading = false
-    })
+    this.initPage()
   },
   methods: {
+    initPage() {
+      this.listLoading = true
+      this.$http.get('/article/list').then((res) => {
+        this.listLoading = false
+        this.menuList = res.items
+        console.log(res)
+      }).catch(() => {
+        this.listLoading = false
+      })
+    },
     closeForm() {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
     },
-    handleCreate() {
-      this.dialogFormVisible = true
-    },
     handleCancel() {
       this.closeForm()
+    },
+    handleCreate() {
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'add'
+    },
+    handleEdit() {
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'edit'
+    },
+    handleDelete() {
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {

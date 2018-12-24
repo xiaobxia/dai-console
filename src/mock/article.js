@@ -11,7 +11,7 @@ for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     id: '@increment',
     timestamp: +Mock.Random.date('T'),
-    author: '@first',
+    name: '@first',
     reviewer: '@first',
     title: '@title(5, 10)',
     content_short: '我是测试数据',

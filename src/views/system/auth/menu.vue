@@ -1,35 +1,37 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
-    </div>
-    <el-table
-      v-loading="listLoading"
-      key="id"
-      :data="menuList"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-    >
-      <el-table-column label="id" align="center" width="65">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="170">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'">
+    <el-card shadow="nerver">
+      <div class="filter-container">
+        <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
+      </div>
+      <el-table
+        v-loading="listLoading"
+        key="id"
+        :data="menuList"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+      >
+        <el-table-column label="id" align="center" width="65">
+          <template slot-scope="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="名称" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="170">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="formRules" label-position="left" label-width="80px">
         <el-form-item prop="name" label="菜单名称">
           <el-input v-model="dialogForm.name"/>
@@ -84,6 +86,8 @@ export default {
         this.listLoading = false
       })
     },
+    verifyAfterDelete() {
+    },
     closeForm() {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
@@ -95,11 +99,12 @@ export default {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'add'
     },
-    handleEdit() {
+    handleEdit(row) {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'edit'
+      this.dialogForm = Object.assign({}, row)
     },
-    handleDelete() {
+    handleDelete(row) {
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

@@ -49,12 +49,15 @@ export const constantRouterMap = [
     path: '',
     component: Layout,
     redirect: 'dashboard',
-    miss: true,
     children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard'
+        name: 'Dashboard',
+        meta: {
+          title: '首页',
+          icon: 'fas fa-home'
+        }
       }
     ]
   }

@@ -3,6 +3,32 @@
     <div class="filter-container">
       <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
     </div>
+    <el-table
+      v-loading="listLoading"
+      key="id"
+      :data="menuList"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+    >
+      <el-table-column label="id" align="center" width="65">
+        <template slot-scope="scope">
+          <span>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="名称" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.author }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="170">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini">修改</el-button>
+          <el-button size="mini" type="danger">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'">
       <el-form ref="dialogForm" :model="dialogForm" :rules="formRules" label-position="left" label-width="80px">
         <el-form-item prop="name" label="菜单名称">
@@ -29,12 +55,14 @@ export default {
   data() {
     return {
       loading: false,
+      listLoading: false,
       dialogFormVisible: false,
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       formRules: {
         name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
-      }
+      },
+      menuList: []
     }
   },
   computed: {
@@ -43,6 +71,14 @@ export default {
     }
   },
   created() {
+    this.listLoading = true
+    this.$http.get('/article/list').then((res) => {
+      this.listLoading = false
+      this.menuList = res.items
+      console.log(res)
+    }).catch(() => {
+      this.listLoading = false
+    })
   },
   methods: {
     closeForm() {

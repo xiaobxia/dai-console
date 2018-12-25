@@ -7,7 +7,7 @@ function localStorageGetItem(key) {
 function localStorageSetItem(key, data) {
   return localStorage.setItem(formatKey(key), data)
 }
-function localStorageRemoveItem(key, data) {
+function localStorageRemoveItem(key) {
   return localStorage.removeItem(formatKey(key))
 }
 const storageUtil = {

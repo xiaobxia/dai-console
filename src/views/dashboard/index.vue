@@ -173,6 +173,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "~@/styles/variables.scss";
   .date {
+    float: right;
     color: $theme-color;
   }
   .chart {
@@ -190,9 +191,12 @@ export default {
       &:last-child {
         margin-bottom: 0;
       }
+      &:hover {
+        background-color: $hover-color;
+      }
     }
     .value {
-      margin-left: 10px;
+      float: right;
       font-size: 18px;
     }
     .title {

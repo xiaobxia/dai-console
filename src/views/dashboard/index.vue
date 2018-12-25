@@ -110,7 +110,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+          data: ['放款金额', '还款金额']
         },
         grid: {
           left: '4%',

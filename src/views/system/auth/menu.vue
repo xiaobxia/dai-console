@@ -2,6 +2,18 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
+        <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
+          <el-row :gutter="12">
+            <el-col :span="8">
+              <el-form-item prop="name" label="菜单名称：">
+                <el-input v-model="searchForm.name"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+            </el-col>
+          </el-row>
+        </el-form>
         <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
       </div>
       <el-table
@@ -30,9 +42,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="formRules" label-position="left" label-width="80px">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="80px">
         <el-form-item prop="name" label="菜单名称">
           <el-input v-model="dialogForm.name"/>
         </el-form-item>
@@ -46,25 +59,35 @@
 </template>
 
 <script>
-
+import Pagination from '@/components/Pagination'
 const dialogFormBase = {
+  name: ''
+}
+const searchFormBase = {
   name: ''
 }
 
 export default {
   name: 'SystemAuthMenu',
-  components: { },
+  components: { Pagination },
   data() {
     return {
+      searchLoading: false,
       loading: false,
       listLoading: false,
       dialogFormVisible: false,
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
-      formRules: {
+      dialogFormRules: {
         name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
       },
-      menuList: []
+      searchForm: Object.assign({}, searchFormBase),
+      menuList: [],
+      listTotal: 0,
+      paging: {
+        page: 1,
+        limit: 10
+      }
     }
   },
   computed: {
@@ -77,14 +100,20 @@ export default {
   },
   methods: {
     initPage() {
+      this.queryList()
+    },
+    queryList() {
       this.listLoading = true
       this.$http.get('/article/list').then((res) => {
         this.listLoading = false
         this.menuList = res.items
+        this.listTotal = res.total
         console.log(res)
       }).catch(() => {
         this.listLoading = false
       })
+    },
+    handleSearch() {
     },
     verifyAfterDelete() {
     },

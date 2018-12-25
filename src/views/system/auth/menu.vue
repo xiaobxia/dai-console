@@ -103,6 +103,7 @@ export default {
       this.queryList()
     },
     queryList() {
+      console.log(this.paging)
       this.listLoading = true
       this.$http.get('/article/list').then((res) => {
         this.listLoading = false
@@ -113,7 +114,14 @@ export default {
         this.listLoading = false
       })
     },
+    resetPaging() {
+      this.paging = {
+        page: 1,
+        limit: 10
+      }
+    },
     handleSearch() {
+      this.resetPaging()
     },
     verifyAfterDelete() {
     },

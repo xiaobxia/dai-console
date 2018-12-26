@@ -146,6 +146,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/user/manger/bankList'),
             name: 'UserBankList',
             meta: { title: '银行卡列表' }
+          },
+          {
+            path: 'detail',
+            component: () => import('@/views/user/manger/detail'),
+            name: 'UserDetail',
+            meta: { title: '用户详情' },
+            hidden: true
           }
         ]
       },
@@ -166,7 +173,7 @@ export const asyncRouterMap = [
             path: 'auditing',
             component: () => import('@/views/user/quota/auditing'),
             name: 'UserQuotaAuditing',
-            meta: { title: '认证列表' }
+            meta: { title: '额度审核列表' }
           }
         ]
       },
@@ -345,13 +352,13 @@ export const asyncRouterMap = [
         path: 'credit',
         component: () => import('@/views/risk/credit'),
         name: 'RiskCredit',
-        meta: { title: '决策管理' }
+        meta: { title: '征信管理' }
       },
       {
         path: 'decision',
         component: () => import('@/views/risk/decision'),
         name: 'RiskDecision',
-        meta: { title: '征信管理' }
+        meta: { title: '决策管理' }
       },
       {
         path: 'thirdParty',
@@ -389,6 +396,20 @@ export const asyncRouterMap = [
             component: () => import('@/views/finance/makeMoney/dayToDay'),
             name: 'FinanceMakeMoneyDayToDay',
             meta: { title: '打款流水列表' }
+          },
+          {
+            path: 'detail',
+            component: () => import('@/views/finance/makeMoney/detail'),
+            name: 'FinanceMakeMoneyDetail',
+            meta: { title: '打款详情' },
+            hidden: true
+          },
+          {
+            path: 'payDetail',
+            component: () => import('@/views/finance/makeMoney/payDetail'),
+            name: 'FinanceMakeMoneyPayDetail',
+            meta: { title: '付款详情' },
+            hidden: true
           }
         ]
       },

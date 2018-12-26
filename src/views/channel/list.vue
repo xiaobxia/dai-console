@@ -2,30 +2,7 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
-        <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="80px">
-          <el-row :gutter="12">
-            <el-col :span="6">
-              <el-form-item prop="name" label="用户：">
-                <el-input v-model="searchForm.name"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item prop="phone" label="手机号：">
-                <el-input v-model="searchForm.phone"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="roles" label="角色：">
-                <el-select v-model="searchForm.roles" class="filter-item">
-                  <el-option label="全部" value="全部"/>
-                  <el-option label="催收" value="催收"/>
-                </el-select>
-                <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-                <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+        <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
       </div>
       <el-table
         v-loading="listLoading"
@@ -41,7 +18,52 @@
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="名称" align="center">
+        <el-table-column label="中文名称" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="英文名称" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道负责人" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道链接" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="推广来源" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="来源id" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="借款显示" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="生效时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>

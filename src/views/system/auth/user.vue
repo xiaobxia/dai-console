@@ -96,6 +96,7 @@ export default {
       searchForm: Object.assign({}, searchFormBase),
       menuList: [],
       listTotal: 0,
+      currentCount: 0,
       paging: {
         page: 1,
         limit: 10
@@ -136,6 +137,11 @@ export default {
       this.resetPaging()
     },
     verifyAfterDelete() {
+      if (this.currentCount === 1) {
+        if (this.paging.page > 1) {
+          this.paging.page = this.paging.page - 1
+        }
+      }
     },
     closeForm() {
       this.dialogFormVisible = false

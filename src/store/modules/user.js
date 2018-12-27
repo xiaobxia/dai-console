@@ -1,5 +1,4 @@
 import Http from '@/utils/httpUtil'
-import md5 from 'md5'
 import storageUtil from '@/utils/storageUtil'
 
 const userInfo = storageUtil.getUserInfo()
@@ -8,7 +7,10 @@ const user = {
     status: '',
     code: '',
     token: userInfo.token,
-    name: userInfo.name,
+    nickName: userInfo.nickName,
+    phone: userInfo.phone,
+    userId: userInfo.userId,
+    userName: userInfo.userName,
     avatar: '',
     introduction: '',
     roles: [],
@@ -20,6 +22,11 @@ const user = {
   mutations: {
     SET_USER: (state, user) => {
       state.name = user.name
+      state.token = user.token
+      state.nickName = user.nickName
+      state.phone = user.phone
+      state.userId = user.userId
+      state.userName = user.userName
     },
     RESET_USER: (state) => {
       state.name = ''
@@ -48,13 +55,13 @@ const user = {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
-      return Http.post('auth/login', {
-        account: username,
-        password: md5(userInfo.password),
-        platform: 'pc'
+      return Http.post('userInfo/login', {
+        username: username,
+        password: userInfo.password
       }).then((data) => {
-        window._token = data.data.token
-        localStorage.setItem('token', data.data.token)
+        const token = data.data.token
+        window._token = token
+        localStorage.setItem('token', token)
         storageUtil.initUserInfo({
           ...data.data,
           isLogin: true
@@ -68,10 +75,7 @@ const user = {
     },
     // 登出
     LogOut({ commit }) {
-      return Http.get('auth/logout', {
-        token: localStorage.getItem('token'),
-        platform: 'mobile'
-      }).then(() => {
+      return Http.get('userInfo/logout').then(() => {
         localStorage.removeItem('token')
         storageUtil.initUserInfo({
           isLogin: false

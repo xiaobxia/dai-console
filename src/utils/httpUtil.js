@@ -3,26 +3,27 @@ import qs from 'qs'
 import { Message } from 'element-ui'
 import storageUtil from '@/utils/storageUtil'
 import router from '@/router/index'
-const basePath = '/serviceBase/'
+// const basePath = '/serviceBase/'
+const basePath = '/xhb/'
 
 axios.interceptors.request.use(function(config) {
-  config.headers.token = window._token || localStorage.getItem('token') || ''
+  config.headers['X-Admin-Token'] = window._token || localStorage.getItem('token') || ''
   return config
 }, function(error) {
   return Promise.reject(error)
 })
 
 axios.interceptors.response.use(function(response) {
-  if (response.data.success === false) {
-    console.error(response.data.message)
-    if (response.data.code === 401) {
+  if (response.data.errno !== 0) {
+    console.error(response.data.errmsg)
+    if (response.data.errno === 501) {
       storageUtil.initUserInfo({
         isLogin: false
       })
       router.push('/login')
     } else {
       Message({
-        message: response.data.message,
+        message: response.data.errmsg,
         type: 'error',
         duration: 5 * 1000
       })
@@ -104,11 +105,11 @@ const Http = {
   },
 
   post(url, param, options) {
-    return axios.post(makeUrl(url), qs.stringify(param), options).then(data => data.data)
+    return axios.post(makeUrl(url), param, options).then(data => data.data)
   },
 
   postRaw(url, param, options) {
-    return axios.post(makeUrl(url), qs.stringify(param), options)
+    return axios.post(makeUrl(url), param, options)
   },
 
   postJSON(url, param, options) {

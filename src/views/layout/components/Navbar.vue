@@ -9,7 +9,7 @@
       <el-dropdown size="small" class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img src="../../../assets/头像.png" class="user-avatar">
-          <span>{{ name }}</span>
+          <span>{{ nickName }}</span>
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
@@ -37,7 +37,7 @@ export default {
     ...mapGetters([
       'sidebar',
       'device',
-      'name'
+      'nickName'
     ])
   },
   methods: {

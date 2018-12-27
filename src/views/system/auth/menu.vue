@@ -10,7 +10,6 @@
             ref="tree"
             :data="menuTree"
             :expand-on-click-node="false"
-            show-checkbox
             default-expand-all
             node-key="id"
             highlight-current>
@@ -42,15 +41,15 @@
       </el-row>
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="100px">
-        <el-form-item prop="title" label="菜单名称">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="100px">
+        <el-form-item prop="title" label="菜单名称：">
           <el-input v-model="dialogForm.title"/>
         </el-form-item>
-        <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接">
+        <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接：">
           <el-input v-model="dialogForm.link"/>
         </el-form-item>
         <el-form-item v-if="!ifRoot && dialogForm.level !== 2" prop="isLeaf" label="菜单类型：">
-          <el-select v-model="dialogForm.isLeaf">
+          <el-select v-model="dialogForm.isLeaf" style="width: 100%">
             <el-option :value="1" label="目录"/>
             <el-option :value="2" label="菜单"/>
           </el-select>
@@ -74,8 +73,6 @@ const dialogFormBase = {
   level: 0,
   pid: 0
 }
-
-const id = 1000
 
 export default {
   name: 'SystemAuthMenu',
@@ -192,7 +189,7 @@ export default {
           this.$http.post(
             this.dialogFormStatus === 'add' ? 'permission/addSysMenuInfo' : '',
             this.dialogForm
-          ).then((res) => {
+          ).then(() => {
             this.loading = false
             this.closeForm()
             this.initPage()

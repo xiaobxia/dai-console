@@ -4,7 +4,6 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import storageUtil from '@/utils/storageUtil'
 import permissionUtil from '@/utils/permission'
-import Http from '@/utils/httpUtil'
 
 NProgress.configure({ showSpinner: false })
 

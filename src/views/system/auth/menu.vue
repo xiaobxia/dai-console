@@ -1,53 +1,59 @@
 <template>
   <div class="app-container">
     <el-card shadow="nerver">
-      <div class="filter-container">
-        <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
-          <el-row :gutter="12">
-            <el-col :span="8">
-              <el-form-item prop="name" label="菜单名称：">
-                <el-input v-model="searchForm.name"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-              <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
-            </el-col>
-          </el-row>
-        </el-form>
+      <div slot="header" class="clearfix">
+        <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增根菜单</el-button>
       </div>
-      <el-table
-        v-loading="listLoading"
-        key="id"
-        :data="menuList"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;"
-      >
-        <el-table-column label="id" align="center" width="65">
-          <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="名称" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="170">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
+      <el-row :gutter="12">
+        <el-col :span="12">
+          <el-tree
+            ref="tree"
+            :data="menuTree"
+            :expand-on-click-node="false"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            highlight-current>
+            <span slot-scope="{ node, data }" class="custom-tree-node">
+              <span>{{ node.label }}</span>
+              <span class="custom-tree-button">
+                <el-button
+                  v-if="node.level < 3"
+                  type="text"
+                  size="mini"
+                  @click="() => appendMenu(node, data)">
+                  增加
+                </el-button>
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="() => editMenu(node, data)">
+                  编辑
+                </el-button>
+                <el-button
+                  type="text"
+                  size="mini"
+                  @click="() => removeMenu(node, data)">
+                  删除
+                </el-button>
+              </span>
+          </span></el-tree>
+        </el-col>
+      </el-row>
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="80px">
-        <el-form-item prop="name" label="菜单名称">
-          <el-input v-model="dialogForm.name"/>
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="100px">
+        <el-form-item prop="title" label="菜单名称">
+          <el-input v-model="dialogForm.title"/>
+        </el-form-item>
+        <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接">
+          <el-input v-model="dialogForm.link"/>
+        </el-form-item>
+        <el-form-item v-if="!ifRoot && dialogForm.level !== 2" prop="isLeaf" label="菜单类型：">
+          <el-select v-model="dialogForm.isLeaf">
+            <el-option :value="1" label="目录"/>
+            <el-option :value="2" label="菜单"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -61,33 +67,31 @@
 <script>
 import Pagination from '@/components/Pagination'
 const dialogFormBase = {
-  name: ''
+  title: '',
+  link: '',
+  isLeaf: 1,
+  type: 2,
+  level: 0,
+  pid: 0
 }
-const searchFormBase = {
-  name: ''
-}
+
+const id = 1000
 
 export default {
   name: 'SystemAuthMenu',
   components: { Pagination },
   data() {
     return {
-      searchLoading: false,
       loading: false,
-      listLoading: false,
       dialogFormVisible: false,
       dialogFormStatus: 'add',
+      ifRoot: true,
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+        link: [{ required: true, message: '请输入菜单链接', trigger: 'blur' }]
       },
-      searchForm: Object.assign({}, searchFormBase),
-      menuList: [],
-      listTotal: 0,
-      paging: {
-        page: 1,
-        limit: 10
-      }
+      menuTree: []
     }
   },
   computed: {
@@ -103,27 +107,46 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
-      this.listLoading = true
       this.$http.get('permission/sysMenuInfoPageData').then((res) => {
-        this.listLoading = false
-        this.menuList = res.items
-        this.listTotal = res.total
-        console.log(res)
-      }).catch(() => {
-        this.listLoading = false
+        const menuList = JSON.parse(res.data.menuList)
+        console.log(menuList)
+        this.menuTree = this.formatTree(menuList)
       })
     },
-    resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
+    formatTree(tree) {
+      const tempTree = []
+      for (let i = 0; i < tree.length; i++) {
+        const item = tree[i]
+        const menu = {
+          id: item.id,
+          label: item.text
+        }
+        if (item.nodes) {
+          menu.children = this.formatTree(item.nodes)
+        }
+        tempTree.push(menu)
       }
+      return tempTree
     },
-    handleSearch() {
-      this.resetPaging()
+    appendMenu(node, data) {
+      this.dialogForm.pid = data.id
+      // 后端0开始，组件1开始
+      this.dialogForm.level = node.level
+      if (node.level === 2) {
+        this.dialogForm.isLeaf = 2
+      }
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'add'
+      this.ifRoot = false
     },
-    verifyAfterDelete() {
+    editMenu(node, data) {
+      const parent = node.parent
+      const children = parent.data.children || parent.data
+      const index = children.findIndex(d => d.id === data.id)
+      children.splice(index, 1)
+    },
+    removeMenu(node, data) {
+      this.handleShowDelete(node, data)
     },
     closeForm() {
       this.dialogFormVisible = false
@@ -135,18 +158,22 @@ export default {
     handleCreate() {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'add'
+      this.ifRoot = true
     },
     handleEdit(row) {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'edit'
       this.dialogForm = Object.assign({}, row)
     },
-    handleDelete(row) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+    handleShowDelete(node, data) {
+      this.$confirm(`此操作将删除菜单“ ${data.label} ”, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.$http.post(`permission/deleteSysMenuInfo/${data.id}`).then((res) => {
+          this.initPage()
+        })
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -162,9 +189,13 @@ export default {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.get('ab').then(() => {
+          this.$http.post(
+            this.dialogFormStatus === 'add' ? 'permission/addSysMenuInfo' : '',
+            this.dialogForm
+          ).then((res) => {
             this.loading = false
             this.closeForm()
+            this.initPage()
           }).catch(() => {
             this.loading = false
           })
@@ -177,3 +208,13 @@ export default {
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+</style>

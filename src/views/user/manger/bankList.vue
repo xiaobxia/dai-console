@@ -45,8 +45,9 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6" style="text-align: right">
+            <el-col :span="6">
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -124,12 +125,48 @@
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
     </el-card>
+    <el-dialog :visible.sync="dialogFormVisible" title="添加银行卡" @closed="handleCancel">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
+        <el-form-item prop="name" label="用户ID">
+          <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+        <el-form-item prop="roles" label="开卡银行：">
+          <el-select v-model="searchForm.black" class="filter-item">
+            <el-option label="全部" value="全部"/>
+            <el-option label="生效" value="生效"/>
+            <el-option label="失效" value="失效"/>
+            <el-option label="已删除" value="已删除"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="roles" label="银行卡类型：">
+          <el-select v-model="searchForm.black" class="filter-item">
+            <el-option label="信用卡" value="信用卡"/>
+            <el-option label="储蓄卡" value="储蓄卡"/>
+            <el-option label="未知" value="未知"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="name" label="银行卡号">
+          <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+        <el-form-item prop="name" label="预留手机号">
+          <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleCancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
 const searchFormBase = {
+  name: '',
+  phone: ''
+}
+const dialogFormBase = {
   name: '',
   phone: ''
 }
@@ -143,6 +180,11 @@ export default {
       loading: false,
       listLoading: false,
       searchForm: Object.assign({}, searchFormBase),
+      dialogFormVisible: false,
+      dialogForm: Object.assign({}, dialogFormBase),
+      dialogFormRules: {
+        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
+      },
       menuList: [],
       listTotal: 0,
       paging: {
@@ -181,7 +223,34 @@ export default {
     handleSearch() {
       this.resetPaging()
     },
+    handleCancel() {
+      this.closeForm()
+    },
+    closeForm() {
+      this.dialogFormVisible = false
+      this.dialogForm = Object.assign({}, dialogFormBase)
+    },
+    handleCreate() {
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'add'
+    },
     verifyAfterDelete() {
+    },
+    handleConfirm() {
+      this.$refs.dialogForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$http.get('ab').then(() => {
+            this.loading = false
+            this.closeForm()
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

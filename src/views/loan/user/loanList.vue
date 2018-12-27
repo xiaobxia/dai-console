@@ -111,6 +111,11 @@
         highlight-current-row
         style="width: 100%;"
       >
+        <el-table-column label="订单号" align="center" width="65">
+          <template slot-scope="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="用户ID" align="center" width="65">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
@@ -121,52 +126,52 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="是否是老用户" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否在白名单" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="借款金额(元)" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="抵扣券金额(元)" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="借款期限" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="公司名称" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" align="center">
+        <el-table-column label="申请来源" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="生日" align="center">
+        <el-table-column label="申请时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="性别" align="center">
+        <el-table-column label="放款时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="类型" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="来源" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="来源详情" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="渠道" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="设备" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="系统" align="center">
+        <el-table-column label="还款时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -176,24 +181,24 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可再借时间" align="center">
+        <el-table-column label="资方" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="是否黑名单" align="center">
+        <el-table-column label="来源" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="渠道" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+            <el-button type="primary" size="mini" @click="handleDetail(scope.row)">查看</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -289,10 +294,8 @@ export default {
     handleCancel() {
       this.closeForm()
     },
-    handleEdit(row) {
-      this.dialogFormVisible = true
-      this.dialogFormStatus = 'edit'
-      this.dialogForm = Object.assign({}, row)
+    handleDetail(row) {
+      this.$router.push({ name: 'LoadUserDetail' })
     },
     handleDelete(row) {
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {

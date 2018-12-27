@@ -11,10 +11,10 @@
             </el-col>
             <el-col :span="8">
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
             </el-col>
           </el-row>
         </el-form>
-        <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
       </div>
       <el-table
         v-loading="listLoading"

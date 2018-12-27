@@ -77,10 +77,32 @@
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加用户':'修改用户'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="80px">
-        <el-form-item prop="name" label="用户名称">
+    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加渠道':'修改渠道'" @closed="handleCancel">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
+        <el-form-item prop="name" label="渠道中文名称：">
           <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+        <el-form-item prop="name" label="渠道英文名称：">
+          <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+        <el-form-item prop="name" label="渠道负责人：">
+          <el-input v-model="dialogForm.name"/>
+        </el-form-item>
+        <el-form-item prop="name" label="状态：">
+          <el-switch
+            v-model="dialogForm.name"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="启用"
+            inactive-text="停用"/>
+        </el-form-item>
+        <el-form-item prop="name" label="借款显示：">
+          <el-switch
+            v-model="dialogForm.name"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="显示"
+            inactive-text="不显示"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -113,7 +135,7 @@ export default {
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        name: [{ required: true, message: '请输入用户名称', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入渠道名称', trigger: 'blur' }]
       },
       searchForm: Object.assign({}, searchFormBase),
       menuList: [],

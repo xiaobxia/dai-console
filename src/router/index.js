@@ -240,6 +240,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/loan/user/overdueList'),
             name: 'LoadUserOverdueList',
             meta: { title: '逾期列表' }
+          },
+          {
+            path: 'detail',
+            component: () => import('@/views/loan/user/detail'),
+            name: 'LoadUserDetail',
+            meta: { title: '借款详情' },
+            hidden: true
           }
         ]
       },

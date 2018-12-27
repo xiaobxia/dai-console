@@ -1,9 +1,12 @@
 <template>
   <div class="app-container">
-    <el-card shadow="hover">
-      <el-card shadow="nerver">
+    <el-card shadow="hover" class="medium-card">
+      <div slot="header" class="clearfix">
+        <span>个人信息详情页</span>
+      </div>
+      <el-card shadow="nerver" class="small-card">
         <div slot="header" class="clearfix">
-          <span>个人信息详情页</span>
+          <span>个人详情</span>
         </div>
         <el-form>
           <el-row :gutter="12">
@@ -70,7 +73,7 @@
           </el-row>
         </el-form>
       </el-card>
-      <el-card shadow="nerver">
+      <el-card shadow="nerver" class="small-card">
         <div slot="header" class="clearfix">
           <span>银行卡信息</span>
         </div>
@@ -109,7 +112,7 @@
           </el-row>
         </el-form>
       </el-card>
-      <el-card shadow="nerver">
+      <el-card shadow="nerver" class="small-card">
         <div slot="header" class="clearfix">
           <span>联系人</span>
         </div>
@@ -148,6 +151,84 @@
           </el-row>
         </el-form>
       </el-card>
+      <el-card shadow="nerver" class="small-card">
+        <div slot="header" class="clearfix">
+          <span>工作信息</span>
+        </div>
+        <el-form>
+          <el-row :gutter="12">
+            <el-col :span="6">
+              <el-form-item label="单位名称：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="公司电话：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="公司地址：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="工作证照：">
+                <span class="value">aaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="工作证明：">
+                <span class="value">aaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="收入证明：">
+                <span class="value">aaa</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-card>
+    </el-card>
+    <el-card shadow="hover" class="medium-card">
+      <div slot="header" class="clearfix">
+        <span>行为信息详情页</span>
+      </div>
+      <el-card shadow="nerver" class="small-card">
+        <div slot="header" class="clearfix">
+          <span>注册信息</span>
+        </div>
+        <el-form>
+          <el-row :gutter="12">
+            <el-col :span="6">
+              <el-form-item label="注册终端类型：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注册app版本：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注册设备名称：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="os版本：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注册来源：">
+                <span class="value">aaaa</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-card>
     </el-card>
   </div>
 </template>
@@ -175,12 +256,6 @@ export default {
     margin-bottom: 20px;
     .is-nerver-shadow{
       margin-bottom: 0;
-      .el-card__header {
-        padding: 10px!important;
-      }
-      .el-card__body {
-        padding: 10px!important;
-      }
     }
   }
 </style>

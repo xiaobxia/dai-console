@@ -4,8 +4,10 @@
 @import './element-ui.scss';
  @import './sidebar.scss';
 @import './btn.scss';
+@import './card.scss';
 
 body {
+  margin: 0;
   height: 100%;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;

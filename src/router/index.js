@@ -491,7 +491,7 @@ export const asyncRouterMap = [
     redirect: 'noredirect',
     name: 'Channel',
     meta: {
-      title: '渠道',
+      title: '渠道管理',
       icon: 'fas fa-handshake'
     },
     children: [

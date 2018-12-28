@@ -14,10 +14,11 @@
             node-key="id"
             highlight-current>
             <span slot-scope="{ node, data }" class="custom-tree-node">
-              <span>{{ node.label }}</span>
+              <el-tag v-if="data.isLeaf === 1" size="mini">{{ node.label }}</el-tag>
+              <el-tag v-if="data.isLeaf === 2" type="warning" size="mini">{{ node.label }}</el-tag>
               <span class="custom-tree-button">
                 <el-button
-                  v-if="node.level < 3"
+                  v-if="node.level < 3 && data.isLeaf === 1"
                   type="text"
                   size="mini"
                   @click="() => appendMenu(node, data)">
@@ -116,7 +117,8 @@ export default {
         const item = tree[i]
         const menu = {
           id: item.id,
-          label: item.text
+          label: item.text,
+          isLeaf: item.isLeaf
         }
         if (item.nodes) {
           menu.children = this.formatTree(item.nodes)

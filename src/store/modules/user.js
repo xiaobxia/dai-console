@@ -14,6 +14,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
+    userRouter: [],
     setting: {
       articlePlatform: []
     }

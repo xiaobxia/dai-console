@@ -118,11 +118,13 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('/article/list').then((res) => {
+      this.$http.get('userInfo/mainPage').then((res) => {
         this.listLoading = false
-        this.menuList = res.items
-        this.listTotal = res.total
-        console.log(res)
+        // this.menuList = res.items
+        // this.listTotal = res.total
+        const menuList = JSON.parse(res.data)
+        console.log(menuList)
+        // console.log(res)
       }).catch(() => {
         this.listLoading = false
       })

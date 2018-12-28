@@ -8,7 +8,6 @@
               ref="tree"
               :data="menuTree"
               :expand-on-click-node="false"
-              default-expand-all
               node-key="id"
               highlight-current
               @node-click="nodeClick">

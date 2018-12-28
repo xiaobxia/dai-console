@@ -19,6 +19,20 @@ function filterAsyncRouter(routes, roles) {
   return res
 }
 
+function filterAsyncRouterBackend(routes, data) {
+  const res = []
+  routes.forEach(route => {
+    const tmp = { ...route }
+    if (permissionUtil.checkPermissionBackend(data, tmp)) {
+      if (tmp.children) {
+        tmp.children = filterAsyncRouterBackend(tmp.children, data)
+      }
+      res.push(tmp)
+    }
+  })
+  return res
+}
+
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -35,6 +49,12 @@ const permission = {
       return new Promise(resolve => {
         const { roles } = data
         commit('SET_ROUTERS', filterAsyncRouter(asyncRouterMap, roles))
+        resolve()
+      })
+    },
+    GenerateRoutesBackend({ commit }, data) {
+      return new Promise(resolve => {
+        commit('SET_ROUTERS', filterAsyncRouterBackend(asyncRouterMap, data))
         resolve()
       })
     }

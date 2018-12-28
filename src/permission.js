@@ -4,6 +4,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import storageUtil from '@/utils/storageUtil'
 import permissionUtil from '@/utils/permission'
+import Http from '@/utils/httpUtil'
 
 NProgress.configure({ showSpinner: false })
 
@@ -17,19 +18,43 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
+      console.log(to.path)
+      const all = true
       // 没有生成过
       if (store.getters.addRouters.length === 0) {
-        store.dispatch('GenerateRoutes', { roles: userInfo.roles }).then(() => {
-          console.log('生成菜单')
-          // router里面原本只有基础的路由，是后来添加的有权限的路由
-          router.addRoutes(store.getters.addRouters)
-          next({ ...to, replace: true })
-        })
+        if (all) {
+          store.dispatch('GenerateRoutes', { roles: userInfo.roles }).then(() => {
+            console.log('生成菜单')
+            // router里面原本只有基础的路由，是后来添加的有权限的路由
+            router.addRoutes(store.getters.addRouters)
+            next({ ...to, replace: true })
+          })
+        } else {
+          // 后端返还
+          Http.get('userInfo/mainPage').then((res) => {
+            const menuList = JSON.parse(res.data)
+            console.log(menuList)
+            store.dispatch('GenerateRoutesBackend', menuList).then(() => {
+              console.log('生成菜单')
+              // router里面原本只有基础的路由，是后来添加的有权限的路由
+              router.addRoutes(store.getters.addRouters)
+              next({ ...to, replace: true })
+            })
+          })
+        }
       }
-      if (permissionUtil.checkPermission(userInfo.roles, to)) {
-        next()
+      if (all) {
+        if (permissionUtil.checkPermission(userInfo.roles, to)) {
+          next()
+        } else {
+          next({ path: '/401', replace: true, query: { noGoBack: true }})
+        }
       } else {
-        next({ path: '/401', replace: true, query: { noGoBack: true }})
+        if (permissionUtil.checkPermissionBackend(store.getters.userRouter, to)) {
+          next()
+        } else {
+          next({ path: '/401', replace: true, query: { noGoBack: true }})
+        }
       }
     }
   } else {

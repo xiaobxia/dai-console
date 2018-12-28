@@ -4,6 +4,7 @@ const getters = {
   device: state => state.app.device,
   token: state => state.user.token,
   avatar: state => state.user.avatar,
+  userRouter: state => state.user.userRouter,
   nickName: state => state.user.nickName,
   introduction: state => state.user.introduction,
   status: state => state.user.status,

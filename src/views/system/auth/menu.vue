@@ -25,6 +25,7 @@
                   添加
                 </el-button>
                 <el-button
+                  v-if="!ifNotDelete(data)"
                   type="text"
                   size="mini"
                   @click="() => editMenu(node, data)">
@@ -44,17 +45,17 @@
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加菜单':'修改菜单'" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="100px">
-        <el-form-item prop="title" label="菜单名称：">
-          <el-input v-model="dialogForm.title"/>
-        </el-form-item>
-        <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接：">
-          <el-input v-model="dialogForm.link"/>
-        </el-form-item>
         <el-form-item v-if="ifAddDialogForm && !ifRoot && dialogForm.level !== 2" prop="isLeaf" label="菜单类型：">
           <el-select v-model="dialogForm.isLeaf" style="width: 100%">
             <el-option :value="1" label="目录"/>
             <el-option :value="2" label="菜单"/>
           </el-select>
+        </el-form-item>
+        <el-form-item prop="title" label="菜单名称：">
+          <el-input v-model="dialogForm.title"/>
+        </el-form-item>
+        <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接：">
+          <el-input v-model="dialogForm.link"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

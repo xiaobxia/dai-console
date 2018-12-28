@@ -18,22 +18,51 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      console.log(to.path)
-      const all = true
+      const all = false
       // 没有生成过
       if (store.getters.addRouters.length === 0) {
         if (all) {
           store.dispatch('GenerateRoutes', { roles: userInfo.roles }).then(() => {
             console.log('生成菜单')
+            console.log(store.getters.addRouters)
             // router里面原本只有基础的路由，是后来添加的有权限的路由
             router.addRoutes(store.getters.addRouters)
             next({ ...to, replace: true })
           })
         } else {
+          // const aa = JSON.stringify([
+          //   {
+          //     name: '系统管理',
+          //     child: [
+          //       {
+          //         name: '权限管理',
+          //         child: [
+          //           {
+          //             name: '管理员列表',
+          //             url: '/permission/sysUserInfoPageData'
+          //           },
+          //           {
+          //             name: '角色列表',
+          //             url: '/permission/sysRoleInfoPageData'
+          //           },
+          //           {
+          //             name: '菜单列表',
+          //             url: '/permission/sysMenuInfoPageData'
+          //           },
+          //           {
+          //             name: '菜单按钮列表',
+          //             url: '/permission/sysButtonInfoPageData'
+          //           }
+          //         ]
+          //       }
+          //     ]
+          //   }
+          // ])
           // 后端返还
           Http.get('userInfo/mainPage').then((res) => {
             const menuList = JSON.parse(res.data)
             console.log(menuList)
+            store.dispatch('CreateFlatUserRouters', menuList)
             store.dispatch('GenerateRoutesBackend', menuList).then(() => {
               console.log('生成菜单')
               // router里面原本只有基础的路由，是后来添加的有权限的路由
@@ -43,18 +72,16 @@ router.beforeEach((to, from, next) => {
           })
         }
       }
+      let permission = false
       if (all) {
-        if (permissionUtil.checkPermission(userInfo.roles, to)) {
-          next()
-        } else {
-          next({ path: '/401', replace: true, query: { noGoBack: true }})
-        }
+        permission = permissionUtil.checkPermission(userInfo.roles, to)
       } else {
-        if (permissionUtil.checkPermissionBackend(store.getters.userRouter, to)) {
-          next()
-        } else {
-          next({ path: '/401', replace: true, query: { noGoBack: true }})
-        }
+        permission = permissionUtil.checkPermissionInFlat(store.getters.flatUserRouters, to)
+      }
+      if (permission) {
+        next()
+      } else {
+        next({ path: '/401', replace: true, query: { noGoBack: true }})
       }
     }
   } else {

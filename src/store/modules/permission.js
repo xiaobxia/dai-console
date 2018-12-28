@@ -33,15 +33,35 @@ function filterAsyncRouterBackend(routes, data) {
   return res
 }
 
+function getPath(routers) {
+  let paths = []
+  for (let i = 0; i < routers.length; i++) {
+    const router = routers[i]
+    if (router.url) {
+      paths.push(router.url)
+    } else {
+      if (router.child && router.child.length > 0) {
+        paths = paths.concat(getPath(router.child))
+      }
+    }
+  }
+  return paths
+}
+
 const permission = {
   state: {
     routers: constantRouterMap,
-    addRouters: []
+    addRouters: [],
+    flatUserRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
+      routers = routers.concat([{ path: '*', redirect: '/404', hidden: true }])
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
+    },
+    SET_FLAT_USR_ROUTERS: (state, routers) => {
+      state.flatUserRouters = routers
     }
   },
   actions: {
@@ -55,6 +75,12 @@ const permission = {
     GenerateRoutesBackend({ commit }, data) {
       return new Promise(resolve => {
         commit('SET_ROUTERS', filterAsyncRouterBackend(asyncRouterMap, data))
+        resolve()
+      })
+    },
+    CreateFlatUserRouters({ commit }, data) {
+      return new Promise(resolve => {
+        commit('SET_FLAT_USR_ROUTERS', getPath(data))
         resolve()
       })
     }

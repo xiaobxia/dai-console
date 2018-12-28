@@ -56,7 +56,7 @@ function checkInUserRouter(userRouter, path) {
   for (let i = 0; i < userRouter.length; i++) {
     const router = userRouter[i]
     if (router.child && router.child.length > 0) {
-      if (checkInUserRouter(router, path)) {
+      if (checkInUserRouter(router.child, path)) {
         ifIn = true
         break
       }
@@ -74,7 +74,7 @@ function checkPermissionBackend(userRouter, current) {
   let ifIn = false
   const meta = current.meta
   if (meta.isLeaf === 2) {
-    if (checkInUserRouter(userRouter, meta.path)) {
+    if (checkInUserRouter(userRouter, meta.link)) {
       return true
     }
   } else {
@@ -91,7 +91,17 @@ function checkPermissionBackend(userRouter, current) {
   return ifIn
 }
 
+function checkPermissionInFlat(flatUserRouters, current) {
+  for (let i = 0; i < flatUserRouters.length; i++) {
+    if (isSamePath(flatUserRouters[i], current.path)) {
+      return true
+    }
+  }
+  return true
+}
+
 export default {
   checkPermission,
-  checkPermissionBackend
+  checkPermissionBackend,
+  checkPermissionInFlat
 }

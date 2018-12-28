@@ -533,10 +533,10 @@ export const asyncRouterMap = [
         meta: { title: '权限管理' },
         children: [
           {
-            path: 'menu',
-            component: () => import('@/views/system/auth/menu'),
-            name: 'SystemAuthMenu',
-            meta: { title: '菜单列表' }
+            path: 'user',
+            component: () => import('@/views/system/auth/user'),
+            name: 'SystemAuthUser',
+            meta: { title: '管理员列表' }
           },
           {
             path: 'role',
@@ -545,10 +545,16 @@ export const asyncRouterMap = [
             meta: { title: '角色列表' }
           },
           {
-            path: 'user',
-            component: () => import('@/views/system/auth/user'),
-            name: 'SystemAuthUser',
-            meta: { title: '管理员列表' }
+            path: 'menu',
+            component: () => import('@/views/system/auth/menu'),
+            name: 'SystemAuthMenu',
+            meta: { title: '菜单列表' }
+          },
+          {
+            path: 'menuButton',
+            component: () => import('@/views/system/auth/menuButton'),
+            name: 'SystemAuthMenuButton',
+            meta: { title: '菜单按钮列表' }
           }
         ]
       },

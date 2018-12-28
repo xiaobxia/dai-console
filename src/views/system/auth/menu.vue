@@ -22,7 +22,7 @@
                   type="text"
                   size="mini"
                   @click="() => appendMenu(node, data)">
-                  增加
+                  添加
                 </el-button>
                 <el-button
                   type="text"
@@ -31,6 +31,7 @@
                   编辑
                 </el-button>
                 <el-button
+                  v-if="!ifNotDelete(data)"
                   type="text"
                   size="mini"
                   @click="() => removeMenu(node, data)">
@@ -49,7 +50,7 @@
         <el-form-item v-if="dialogForm.isLeaf === 2" prop="link" label="菜单链接：">
           <el-input v-model="dialogForm.link"/>
         </el-form-item>
-        <el-form-item v-if="!ifRoot && dialogForm.level !== 2" prop="isLeaf" label="菜单类型：">
+        <el-form-item v-if="ifAddDialogForm && !ifRoot && dialogForm.level !== 2" prop="isLeaf" label="菜单类型：">
           <el-select v-model="dialogForm.isLeaf" style="width: 100%">
             <el-option :value="1" label="目录"/>
             <el-option :value="2" label="菜单"/>
@@ -118,7 +119,8 @@ export default {
         const menu = {
           id: item.id,
           label: item.text,
-          isLeaf: item.isLeaf
+          isLeaf: item.isLeaf,
+          link: item.link
         }
         if (item.nodes) {
           menu.children = this.formatTree(item.nodes)
@@ -139,16 +141,22 @@ export default {
       this.ifRoot = false
     },
     editMenu(node, data) {
-      const parent = node.parent
-      const children = parent.data.children || parent.data
-      const index = children.findIndex(d => d.id === data.id)
-      children.splice(index, 1)
+      this.ifRoot = node.level === 1
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'edit'
+      this.dialogForm = {
+        isLeaf: data.isLeaf,
+        title: data.label,
+        link: data.link,
+        id: data.id
+      }
     },
     removeMenu(node, data) {
       this.handleShowDelete(node, data)
     },
     closeForm() {
       this.dialogFormVisible = false
+      this.ifRoot = true
       this.dialogForm = Object.assign({}, dialogFormBase)
     },
     handleCancel() {
@@ -159,11 +167,6 @@ export default {
       this.dialogFormStatus = 'add'
       this.ifRoot = true
     },
-    handleEdit(row) {
-      this.dialogFormVisible = true
-      this.dialogFormStatus = 'edit'
-      this.dialogForm = Object.assign({}, row)
-    },
     handleShowDelete(node, data) {
       this.$confirm(`此操作将删除菜单“ ${data.label} ”, 是否继续?`, '提示', {
         confirmButtonText: '确定',
@@ -171,11 +174,11 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http.post(`permission/deleteSysMenuInfo/${data.id}`).then((res) => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
           this.initPage()
-        })
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
         })
       }).catch(() => {
         this.$message({
@@ -189,7 +192,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$http.post(
-            this.dialogFormStatus === 'add' ? 'permission/addSysMenuInfo' : '',
+            this.dialogFormStatus === 'add' ? 'permission/addSysMenuInfo' : 'permission/editSysMenuInfo',
             this.dialogForm
           ).then(() => {
             this.loading = false
@@ -203,6 +206,9 @@ export default {
           return false
         }
       })
+    },
+    ifNotDelete(data) {
+      return ['系统管理', '权限管理', '管理员列表', '角色列表', '菜单列表', '菜单按钮列表'].indexOf(data.label) !== -1
     }
   }
 }

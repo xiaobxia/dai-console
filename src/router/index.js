@@ -536,19 +536,19 @@ export const asyncRouterMap = [
             path: 'menu',
             component: () => import('@/views/system/auth/menu'),
             name: 'SystemAuthMenu',
-            meta: { title: '菜单管理' }
+            meta: { title: '菜单列表' }
           },
           {
             path: 'role',
             component: () => import('@/views/system/auth/role'),
             name: 'SystemAuthRole',
-            meta: { title: '角色管理' }
+            meta: { title: '角色列表' }
           },
           {
             path: 'user',
             component: () => import('@/views/system/auth/user'),
             name: 'SystemAuthUser',
-            meta: { title: '用户管理' }
+            meta: { title: '管理员列表' }
           }
         ]
       },

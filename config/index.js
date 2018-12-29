@@ -64,9 +64,9 @@ module.exports = {
     // 解决打包时font的问题
     assetsPathInCss: '../../',
     // assetsPublicPath: './',
-    assetsPublicPath: '/',
-    cdnPublicPath: 'http://pk0hzm7qe.bkt.clouddn.com/',
-    ifCdn: false,
+    assetsPublicPath: './',
+    cdnPublicPath: 'http://pkhqwthbg.bkt.clouddn.com/',
+    ifCdn: true,
 
     /**
      * Source Maps

@@ -204,7 +204,7 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('user/findBankList', {
+      this.$http.post('user/findBankList', {
         ...this.paging
       }).then((res) => {
         this.listLoading = false
@@ -244,7 +244,7 @@ export default {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.get('ab').then(() => {
+          this.$http.post('ab').then(() => {
             this.loading = false
             this.closeForm()
           }).catch(() => {

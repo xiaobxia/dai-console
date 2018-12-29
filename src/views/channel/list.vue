@@ -2,70 +2,42 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
-        <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
+        <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="100px">
+          <el-row :gutter="12">
+            <el-col :span="6">
+              <el-form-item prop="routeName" label="渠道名称：">
+                <el-input v-model="searchForm.routeName"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="menuList"
+        :data="bankList"
         border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="id" align="center" width="65">
+        <el-table-column label="ID" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="中文名称" align="center">
+        <el-table-column label="渠道名称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.routeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="英文名称" align="center">
+        <el-table-column label="添加人" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="渠道负责人" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="渠道链接" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="推广来源" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="来源id" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="借款显示" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="生效时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.addUser }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -75,34 +47,32 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加渠道':'修改渠道'" @closed="handleCancel">
+    <el-dialog :visible.sync="dialogFormVisible" title="添加银行卡" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
-        <el-form-item prop="name" label="渠道中文名称：">
+        <el-form-item prop="name" label="用户ID">
           <el-input v-model="dialogForm.name"/>
         </el-form-item>
-        <el-form-item prop="name" label="渠道英文名称：">
+        <el-form-item prop="roles" label="开卡银行：">
+          <el-select v-model="searchForm.black" class="filter-item">
+            <el-option label="全部" value="全部"/>
+            <el-option label="生效" value="生效"/>
+            <el-option label="失效" value="失效"/>
+            <el-option label="已删除" value="已删除"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="roles" label="银行卡类型：">
+          <el-select v-model="searchForm.black" class="filter-item">
+            <el-option label="信用卡" value="信用卡"/>
+            <el-option label="储蓄卡" value="储蓄卡"/>
+            <el-option label="未知" value="未知"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="name" label="银行卡号">
           <el-input v-model="dialogForm.name"/>
         </el-form-item>
-        <el-form-item prop="name" label="渠道负责人：">
+        <el-form-item prop="name" label="预留手机号">
           <el-input v-model="dialogForm.name"/>
-        </el-form-item>
-        <el-form-item prop="name" label="状态：">
-          <el-switch
-            v-model="dialogForm.name"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="启用"
-            inactive-text="停用"/>
-        </el-form-item>
-        <el-form-item prop="name" label="借款显示：">
-          <el-switch
-            v-model="dialogForm.name"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="显示"
-            inactive-text="不显示"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -115,10 +85,10 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-const dialogFormBase = {
-  name: ''
-}
 const searchFormBase = {
+  routeName: ''
+}
+const dialogFormBase = {
   name: '',
   phone: ''
 }
@@ -131,25 +101,16 @@ export default {
       searchLoading: false,
       loading: false,
       listLoading: false,
+      searchForm: Object.assign({}, searchFormBase),
       dialogFormVisible: false,
-      dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        name: [{ required: true, message: '请输入渠道名称', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
       },
-      searchForm: Object.assign({}, searchFormBase),
-      menuList: [],
-      listTotal: 0,
-      paging: {
-        page: 1,
-        limit: 10
-      }
+      bankList: []
     }
   },
   computed: {
-    ifAddDialogForm() {
-      return this.dialogFormStatus === 'add'
-    }
   },
   created() {
     this.initPage()
@@ -161,64 +122,42 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('/article/list').then((res) => {
+      this.$http.post('route/routeList', {
+        ...this.paging
+      }).then((res) => {
         this.listLoading = false
-        this.menuList = res.items
-        this.listTotal = res.total
+        this.bankList = res.data.list
         console.log(res)
       }).catch(() => {
         this.listLoading = false
       })
     },
-    resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
-      }
-    },
     handleSearch() {
-      this.resetPaging()
+      this.queryList()
     },
-    verifyAfterDelete() {
+    handleCancel() {
+      this.closeForm()
     },
     closeForm() {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
     },
-    handleCancel() {
-      this.closeForm()
-    },
     handleCreate() {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'add'
     },
-    handleEdit(row) {
-      this.dialogFormVisible = true
-      this.dialogFormStatus = 'edit'
-      this.dialogForm = Object.assign({}, row)
-    },
-    handleDelete(row) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+    verifyAfterDelete() {
+      if (this.currentSize < 2) {
+        if (this.paging.pageNo > 1) {
+          this.paging.pageNo = this.paging.pageNo - 1
+        }
+      }
     },
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.get('ab').then(() => {
+          this.$http.post('ab').then(() => {
             this.loading = false
             this.closeForm()
           }).catch(() => {

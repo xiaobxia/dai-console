@@ -180,7 +180,7 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('user/findUserList', {
+      this.$http.post('user/findUserList', {
         // ...this.searchForm,
         ...this.paging
       }).then((res) => {
@@ -231,7 +231,7 @@ export default {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.get('ab').then(() => {
+          this.$http.post('ab').then(() => {
             this.loading = false
             this.closeForm()
           }).catch(() => {

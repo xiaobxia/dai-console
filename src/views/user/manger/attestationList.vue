@@ -158,7 +158,7 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('user/findIdentifyList', {
+      this.$http.post('user/findIdentifyList', {
         ...this.searchForm,
         ...this.paging
       }).then((res) => {

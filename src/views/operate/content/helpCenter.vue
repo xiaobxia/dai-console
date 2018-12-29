@@ -172,7 +172,7 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.get('announcement/findHelpCenter', {
+      this.$http.post('announcement/findHelpCenter', {
         ...this.searchForm,
         ...this.paging
       }).then((res) => {

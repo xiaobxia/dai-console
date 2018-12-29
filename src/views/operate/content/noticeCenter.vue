@@ -166,7 +166,7 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.get('announcement/findAnnouncement', {
+      this.$http.post('announcement/findAnnouncement', {
         ...this.searchForm,
         ...this.paging
       }).then((res) => {

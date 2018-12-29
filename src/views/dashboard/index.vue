@@ -168,6 +168,17 @@ export default {
     }
   },
   created() {
+    this.initPage()
+  },
+  methods: {
+    initPage() {
+      this.queryList()
+    },
+    queryList() {
+      // this.$http.get('index/test').then((res) => {
+      // }).catch(() => {
+      // })
+    }
   }
 }
 </script>

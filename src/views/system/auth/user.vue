@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
-        <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="80px">
+        <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="80px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="name" label="用户：">
-                <el-input v-model="searchForm.name"/>
+              <el-form-item prop="nickname" label="昵称：">
+                <el-input v-model="searchForm.nickname"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -15,14 +15,20 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="roles" label="角色：">
-                <el-select v-model="searchForm.roles" class="filter-item">
-                  <el-option label="全部" value="全部"/>
-                  <el-option label="催收" value="催收"/>
-                </el-select>
-                <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-                <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
+              <el-form-item prop="name" label="创建时间：" label-width="90px">
+                <el-date-picker
+                  v-model="searchForm.register"
+                  style="width: 100%"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"/>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
+              <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -41,9 +47,29 @@
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="名称" align="center">
+        <el-table-column label="昵称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.nickname }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="登录名" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.username }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="手机号" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.phone }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="邮箱" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.email }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -53,12 +79,24 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加用户':'修改用户'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="80px">
-        <el-form-item prop="name" label="用户名称">
-          <el-input v-model="dialogForm.name"/>
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="80px">
+        <el-form-item prop="username" label="登录名：">
+          <el-input v-model="dialogForm.username"/>
+        </el-form-item>
+        <el-form-item prop="nickname" label="昵称：">
+          <el-input v-model="dialogForm.nickname"/>
+        </el-form-item>
+        <el-form-item prop="phone" label="手机号：">
+          <el-input v-model="dialogForm.phone"/>
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱：">
+          <el-input v-model="dialogForm.email"/>
+        </el-form-item>
+        <el-form-item prop="password" label="密码：">
+          <el-input v-model="dialogForm.password"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -72,11 +110,17 @@
 <script>
 import Pagination from '@/components/Pagination'
 const dialogFormBase = {
-  name: ''
+  nickname: '',
+  phone: '',
+  email: '',
+  username: '',
+  password: ''
 }
 const searchFormBase = {
-  name: '',
-  phone: ''
+  nickname: '',
+  phone: '',
+  email: '',
+  register: ['', '']
 }
 
 export default {
@@ -91,15 +135,19 @@ export default {
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        name: [{ required: true, message: '请输入用户名称', trigger: 'blur' }]
+        username: [{ required: true, message: '请输入登入名', trigger: 'blur' }],
+        nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+        phone: [{ required: true, message: '请输入正确手机号', pattern: /^1[34578]\d{9}$/, trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入正确邮箱', type: 'email', trigger: 'blur' }]
       },
       searchForm: Object.assign({}, searchFormBase),
       menuList: [],
       listTotal: 0,
       currentCount: 0,
       paging: {
-        page: 1,
-        limit: 10
+        pageNo: 1,
+        pageSize: 10
       }
     }
   },
@@ -118,25 +166,41 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('userInfo/mainPage').then((res) => {
+      this.$http.post('userInfo/querySysUserInfos', {
+        ...this.formatSearch(),
+        ...this.paging
+      }).then((res) => {
         this.listLoading = false
-        // this.menuList = res.items
-        // this.listTotal = res.total
-        const menuList = JSON.parse(res.data)
-        console.log(menuList)
-        // console.log(res)
+        this.menuList = res.data.userInfoList
+        this.listTotal = res.data.total
+        this.currentCount = res.data.userInfoList.length
       }).catch(() => {
         this.listLoading = false
       })
     },
-    resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
+    formatSearch() {
+      const data = {}
+      for (const key in this.searchForm) {
+        if (key === 'register') {
+          if (this.searchForm['register'][0]) {
+            data.startDate = this.searchForm.register[0]
+            data.endDate = this.searchForm.register[1]
+          }
+        } else {
+          data[key] = this.searchForm[key]
+        }
       }
+      return data
+    },
+    resetPaging() {
+      this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()
+      this.queryList()
+    },
+    handleResetSearch() {
+      this.searchForm = Object.assign({}, searchFormBase)
     },
     verifyAfterDelete() {
       if (this.currentCount === 1) {
@@ -167,9 +231,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        this.$http.post(`userInfo/deleteSysUserInfo/${row.id}`).then((res) => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.verifyAfterDelete()
+          this.initPage()
         })
       }).catch(() => {
         this.$message({
@@ -182,9 +250,13 @@ export default {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.get('ab').then(() => {
+          this.$http.post(
+            this.dialogFormStatus === 'add' ? 'userInfo/addSysUserInfo' : 'userInfo/editSysUserInfo',
+            this.dialogForm
+          ).then(() => {
             this.loading = false
             this.closeForm()
+            this.initPage()
           }).catch(() => {
             this.loading = false
           })

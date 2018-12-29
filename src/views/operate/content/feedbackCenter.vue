@@ -22,6 +22,7 @@
             </el-col>
             <el-col :span="6">
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -79,6 +80,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+import moment from 'moment'
 const searchFormBase = {
   mobile: '',
   time: ['', '']
@@ -114,9 +116,7 @@ export default {
     queryList() {
       this.listLoading = true
       this.$http.get('announcement/findFeedback', {
-        mobile: this.searchForm.mobile,
-        // beginTime: this.searchForm.time[0],
-        // endTime: this.searchForm.time[1],
+        ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
@@ -133,6 +133,23 @@ export default {
     handleSearch() {
       this.resetPaging()
       this.queryList()
+    },
+    handleResetSearch() {
+      this.searchForm = Object.assign({}, searchFormBase)
+    },
+    formatSearch() {
+      const data = {}
+      for (const key in this.searchForm) {
+        if (key === 'time') {
+          if (this.searchForm['time'][0]) {
+            data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
+            data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
+          }
+        } else {
+          data[key] = this.searchForm[key]
+        }
+      }
+      return data
     },
     verifyAfterDelete() {
       if (this.currentSize < 2) {

@@ -851,6 +851,16 @@ export const asyncRouterMap = [
               isLeaf: 2,
               link: '/system/config/global'
             }
+          },
+          {
+            path: 'loanParameter',
+            component: () => import('@/views/system/config/loanParameter'),
+            name: 'SystemConfigLoanParameter',
+            meta: {
+              title: '借款参数管理',
+              isLeaf: 2,
+              link: '/system/config/loanParameter'
+            }
           }
         ]
       }

@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const all = false
+      const all = true
       // 没有生成过
       if (store.getters.addRouters.length === 0) {
         if (all) {

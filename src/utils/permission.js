@@ -71,24 +71,25 @@ function checkInUserRouter(userRouter, path) {
 }
 
 function checkPermissionBackend(userRouter, current) {
-  let ifIn = false
+  let lastLink = ''
   const meta = current.meta
   if (meta.isLeaf === 2) {
     if (checkInUserRouter(userRouter, meta.link)) {
-      return true
+      return meta.link
     }
   } else {
     // 如果是目录，那子菜单有就行
     if (current.children && current.children.length > 0) {
       for (let i = 0; i < current.children.length; i++) {
-        if (checkPermissionBackend(userRouter, current.children[i])) {
-          ifIn = true
+        const link = checkPermissionBackend(userRouter, current.children[i])
+        if (link) {
+          lastLink = link
           break
         }
       }
     }
   }
-  return ifIn
+  return lastLink
 }
 
 function checkPermissionInFlat(flatUserRouters, current) {
@@ -100,8 +101,46 @@ function checkPermissionInFlat(flatUserRouters, current) {
   return true
 }
 
+function getTitle(userRouter, path, level, nowLevel) {
+  let ifIn = false
+  let title = ''
+  for (let i = 0; i < userRouter.length; i++) {
+    const router = userRouter[i]
+    if (router.child && router.child.length > 0) {
+      const tempTitle = getTitle(router.child, path, level, nowLevel + 1)
+      if (tempTitle) {
+        if (tempTitle !== true) {
+          title = tempTitle
+        } else if (level === nowLevel) {
+          title = router.name
+        }
+        ifIn = true
+        break
+      }
+    } else {
+      if (isSamePath(router.url, path)) {
+        ifIn = true
+        if (level === nowLevel) {
+          title = router.name
+        }
+        break
+      }
+    }
+  }
+  if (title) {
+    return title
+  }
+  return ifIn
+}
+
+function findTitle(userRouter, link, level) {
+  // 进入这个函数，那么一定是有title的
+  return getTitle(userRouter, link, level, 1)
+}
+
 export default {
   checkPermission,
   checkPermissionBackend,
-  checkPermissionInFlat
+  checkPermissionInFlat,
+  findTitle
 }

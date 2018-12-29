@@ -115,7 +115,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
   </div>
 </template>
@@ -123,8 +123,10 @@
 <script>
 import Pagination from '@/components/Pagination'
 const searchFormBase = {
-  name: '',
-  phone: ''
+  userId: '',
+  userName: '',
+  mobile: '',
+  state: ''
 }
 
 export default {
@@ -139,8 +141,8 @@ export default {
       menuList: [],
       listTotal: 0,
       paging: {
-        page: 1,
-        limit: 10
+        pageNo: 1,
+        pageSize: 10
       }
     }
   },
@@ -156,7 +158,10 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('/article/list').then((res) => {
+      this.$http.get('user/findIdentifyList', {
+        ...this.searchForm,
+        ...this.paging
+      }).then((res) => {
         this.listLoading = false
         this.menuList = res.items
         this.listTotal = res.total
@@ -166,10 +171,7 @@ export default {
       })
     },
     resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
-      }
+      this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()

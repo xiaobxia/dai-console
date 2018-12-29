@@ -19,14 +19,17 @@ function filterAsyncRouter(routes, roles) {
   return res
 }
 
-function filterAsyncRouterBackend(routes, data) {
+function filterAsyncRouterBackend(routes, data, level) {
+  level = level || 1
   const res = []
   routes.forEach(route => {
     const tmp = { ...route }
-    if (permissionUtil.checkPermissionBackend(data, tmp)) {
+    const link = permissionUtil.checkPermissionBackend(data, tmp, level)
+    if (link) {
       if (tmp.children) {
-        tmp.children = filterAsyncRouterBackend(tmp.children, data)
+        tmp.children = filterAsyncRouterBackend(tmp.children, data, level + 1)
       }
+      tmp.meta.title = permissionUtil.findTitle(data, link, level)
       res.push(tmp)
     }
   })

@@ -55,40 +55,35 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="menuList"
+        :data="bankList"
         border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="ID" align="center" width="65">
+        <el-table-column label="借款人ID" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="借款人ID" align="center" width="65">
-          <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
+            <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="持卡人姓名" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.userName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="手机号码" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.mobile }}</span>
           </template>
         </el-table-column>
         <el-table-column label="银行名称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.bankName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="银行卡号" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.bankCardNo }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开户行地址" align="center">
@@ -113,7 +108,7 @@
         </el-table-column>
         <el-table-column label="添加时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -123,7 +118,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" title="添加银行卡" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
@@ -163,8 +158,11 @@
 <script>
 import Pagination from '@/components/Pagination'
 const searchFormBase = {
-  name: '',
-  phone: ''
+  userId: '',
+  userName: '',
+  mobile: '',
+  beginTime: '',
+  endTime: ''
 }
 const dialogFormBase = {
   name: '',
@@ -185,11 +183,12 @@ export default {
       dialogFormRules: {
         name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
       },
-      menuList: [],
+      bankList: [],
       listTotal: 0,
+      currentSize: 0,
       paging: {
-        page: 1,
-        limit: 10
+        pageNo: 1,
+        pageSize: 10
       }
     }
   },
@@ -205,20 +204,20 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('/article/list').then((res) => {
+      this.$http.get('user/findBankList', {
+        ...this.paging
+      }).then((res) => {
         this.listLoading = false
-        this.menuList = res.items
-        this.listTotal = res.total
+        this.bankList = res.data.list
+        this.listTotal = res.data.count
+        this.currentSize = res.data.list.length
         console.log(res)
       }).catch(() => {
         this.listLoading = false
       })
     },
     resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
-      }
+      this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()
@@ -235,6 +234,11 @@ export default {
       this.dialogFormStatus = 'add'
     },
     verifyAfterDelete() {
+      if (this.currentSize < 2) {
+        if (this.paging.pageNo > 1) {
+          this.paging.pageNo = this.paging.pageNo - 1
+        }
+      }
     },
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {

@@ -5,8 +5,8 @@
         <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="100px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="phone" label="用户ID：">
-                <el-input v-model="searchForm.id"/>
+              <el-form-item prop="userId" label="用户ID：">
+                <el-input v-model="searchForm.userId"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -155,7 +155,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.page" :limit.sync="paging.limit" @pagination="queryList" />
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加用户':'修改用户'" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="left" label-width="80px">
@@ -177,8 +177,14 @@ const dialogFormBase = {
   name: ''
 }
 const searchFormBase = {
-  name: '',
-  phone: ''
+  userId: '',
+  userName: '',
+  mobile: '',
+  beginTime: '',
+  endTime: '',
+  qudao: '',
+  blackState: '',
+  identifyState: ''
 }
 
 export default {
@@ -199,8 +205,8 @@ export default {
       menuList: [],
       listTotal: 0,
       paging: {
-        page: 1,
-        limit: 10
+        pageNo: 1,
+        pageSize: 10
       }
     }
   },
@@ -219,7 +225,10 @@ export default {
     queryList() {
       console.log(this.paging)
       this.listLoading = true
-      this.$http.get('/article/list').then((res) => {
+      this.$http.get('user/findUserList', {
+        ...this.searchForm,
+        ...this.paging
+      }).then((res) => {
         this.listLoading = false
         this.menuList = res.items
         this.listTotal = res.total
@@ -229,10 +238,7 @@ export default {
       })
     },
     resetPaging() {
-      this.paging = {
-        page: 1,
-        limit: 10
-      }
+      this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()

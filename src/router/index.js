@@ -79,7 +79,8 @@ export const asyncRouterMap = [
     meta: {
       title: '统计',
       icon: 'far fa-chart-bar',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/statistics'
     },
     children: [
       {
@@ -132,7 +133,8 @@ export const asyncRouterMap = [
     meta: {
       title: '用户管理',
       icon: 'fas fa-user',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/user'
     },
     children: [
       {
@@ -142,7 +144,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '用户管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/user/manger'
         },
         children: [
           {
@@ -205,7 +208,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '额度管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/user/quota'
         },
         children: [
           {
@@ -237,7 +241,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '利息管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/user/interest'
         },
         children: [
           {
@@ -272,7 +277,8 @@ export const asyncRouterMap = [
     meta: {
       title: '借款管理',
       icon: 'fas fa-hand-holding-usd',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/loan'
     },
     children: [
       {
@@ -282,7 +288,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '用户借款管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/loan/user'
         },
         children: [
           {
@@ -345,7 +352,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '信审管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/loan/trial'
         },
         children: [
           {
@@ -390,7 +398,8 @@ export const asyncRouterMap = [
     meta: {
       title: '运营管理',
       icon: 'fas fa-laptop',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/operate'
     },
     children: [
       {
@@ -400,7 +409,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '内容管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/operate/content'
         },
         children: [
           {
@@ -424,6 +434,16 @@ export const asyncRouterMap = [
             }
           },
           {
+            path: 'feedbackCenter',
+            component: () => import('@/views/operate/content/feedbackCenter'),
+            name: 'OperateContentFeedbackCenter',
+            meta: {
+              title: '反馈中心管理',
+              isLeaf: 2,
+              link: '/operate/content/feedbackCenter'
+            }
+          },
+          {
             path: 'activity',
             component: () => import('@/views/operate/content/activity'),
             name: 'OperateContentActivity',
@@ -442,7 +462,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '催收管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/operate/collection'
         },
         children: [
           {
@@ -487,7 +508,8 @@ export const asyncRouterMap = [
     meta: {
       title: '风控管理',
       icon: 'fas fa-shield-alt',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/risk'
     },
     children: [
       {
@@ -530,7 +552,8 @@ export const asyncRouterMap = [
     meta: {
       title: '财务管理',
       icon: 'fas fa-money-check',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/finance'
     },
     children: [
       {
@@ -540,7 +563,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '打款管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/finance/makeMoney'
         },
         children: [
           {
@@ -594,7 +618,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '扣款管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/finance/cutMoney'
         },
         children: [
           {
@@ -626,7 +651,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '回款管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/finance/moneyBack'
         },
         children: [
           {
@@ -658,7 +684,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '第三方费用管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/finance/thirdParty'
         },
         children: [
           {
@@ -693,7 +720,8 @@ export const asyncRouterMap = [
     meta: {
       title: '渠道管理',
       icon: 'fas fa-handshake',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/channel'
     },
     children: [
       {
@@ -736,7 +764,8 @@ export const asyncRouterMap = [
     meta: {
       title: '系统管理',
       icon: 'fab fa-windows',
-      isLeaf: 1
+      isLeaf: 1,
+      link: '/system'
     },
     children: [
       {
@@ -746,7 +775,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '权限管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/system/auth'
         },
         children: [
           {
@@ -798,7 +828,8 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         meta: {
           title: '全局配置管理',
-          isLeaf: 1
+          isLeaf: 1,
+          link: '/system/config'
         },
         children: [
           {

@@ -40,9 +40,10 @@
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="170">
+        <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="warning" size="mini" @click="handleSet(scope.row)">设置权限</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -58,6 +59,25 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
         <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="setMenuFormVisible" title="设置权限" @closed="handleSetMenuCancel">
+      <el-tree
+        ref="tree"
+        :data="menuTree"
+        :expand-on-click-node="false"
+        :default-checked-keys="checkedKeys"
+        show-checkbox
+        node-key="id"
+        highlight-current>
+        <span slot-scope="{ node, data }" class="custom-tree-node">
+          <el-tag v-if="data.type === 2 && data.isLeaf === 1" size="mini">{{ node.label }}</el-tag>
+          <el-tag v-if="data.type === 2 && data.isLeaf === 2" type="warning" size="mini">{{ node.label }}</el-tag>
+          <el-tag v-if="data.type === 1" type="info" size="mini">{{ node.label }}</el-tag>
+      </span></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleSetMenuCancel">取消</el-button>
+        <el-button :loading="setMenuLoading" type="primary" @click="handleSetMenuConfirm">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -80,7 +100,9 @@ export default {
     return {
       searchLoading: false,
       loading: false,
+      setMenuLoading: false,
       listLoading: false,
+      setMenuFormVisible: false,
       dialogFormVisible: false,
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
@@ -89,12 +111,15 @@ export default {
       },
       searchForm: Object.assign({}, searchFormBase),
       roleList: [],
+      menuTree: [],
+      checkedKeys: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
         pageSize: 10
       },
-      currentSize: 0
+      currentSize: 0,
+      currentRoleId: ''
     }
   },
   computed: {
@@ -155,6 +180,76 @@ export default {
         name: row.name,
         id: row.id
       }
+    },
+    handleSet(row) {
+      this.setMenuFormVisible = true
+      this.currentRoleId = row.id
+      this.$http.get(`permission/setAuthoritysPageData/${row.id}`).then((res) => {
+        const menuList = JSON.parse(res.data.authoritys)
+        console.log(menuList)
+        this.menuTree = this.formatTree(menuList)
+      })
+    },
+    formatTree(tree) {
+      const tempTree = []
+      for (let i = 0; i < tree.length; i++) {
+        const item = tree[i]
+        let menu = {}
+        const newId = `${item.id}|${item.type}`
+        if (item.type === 2) {
+          menu = {
+            id: newId,
+            label: item.text,
+            isLeaf: item.isLeaf,
+            link: item.link,
+            type: item.type
+          }
+          if (item.isLeaf === 2 && !item.nodes) {
+            if (item.state && item.state.checked) {
+              this.checkedKeys.push(newId)
+            }
+          }
+          if (item.nodes) {
+            menu.children = this.formatTree(item.nodes)
+          }
+        } else {
+          // 按钮
+          menu = {
+            id: newId,
+            label: item.text,
+            type: item.type
+          }
+          if (item.state && item.state.checked) {
+            this.checkedKeys.push(newId)
+          }
+        }
+        tempTree.push(menu)
+      }
+      return tempTree
+    },
+    closeSetMenu() {
+      this.setMenuFormVisible = false
+      this.currentRoleId = ''
+      this.menuTree = []
+      this.checkedKeys = []
+    },
+    handleSetMenuCancel() {
+      this.closeSetMenu()
+    },
+    handleSetMenuConfirm() {
+      let keys = this.$refs.tree.getHalfCheckedKeys()
+      keys = keys.concat(this.$refs.tree.getCheckedKeys())
+      console.log(keys)
+      this.setMenuLoading = true
+      this.$http.post('permission/setAuthoritys', {
+        authoritys: keys.join(','),
+        roleId: this.currentRoleId
+      }).then(() => {
+        this.setMenuLoading = false
+        this.closeSetMenu()
+      }).catch(() => {
+        this.setMenuLoading = false
+      })
     },
     handleDelete(row) {
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {

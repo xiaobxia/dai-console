@@ -62,7 +62,7 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="menuList"
+        :data="userList"
         border
         fit
         highlight-current-row
@@ -70,82 +70,37 @@
       >
         <el-table-column label="用户ID" align="center" width="65">
           <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
+            <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.userName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="公司名称" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.companyName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="手机号" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="生日" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="性别" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="类型" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="来源" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="来源详情" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="渠道" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.mobile }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="系统" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="可再借时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.device }}</span>
           </template>
         </el-table-column>
         <el-table-column label="是否黑名单" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.blackState }}</span>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -202,7 +157,7 @@ export default {
         name: [{ required: true, message: '请输入用户名称', trigger: 'blur' }]
       },
       searchForm: Object.assign({}, searchFormBase),
-      menuList: [],
+      userList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -226,12 +181,12 @@ export default {
       console.log(this.paging)
       this.listLoading = true
       this.$http.get('user/findUserList', {
-        ...this.searchForm,
+        // ...this.searchForm,
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.menuList = res.items
-        this.listTotal = res.total
+        this.userList = res.data.list
+        this.listTotal = res.data.total
         console.log(res)
       }).catch(() => {
         this.listLoading = false

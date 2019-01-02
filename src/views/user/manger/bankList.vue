@@ -5,29 +5,24 @@
         <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="100px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="phone" label="借款人ID：">
-                <el-input v-model="searchForm.id"/>
+              <el-form-item prop="userId" label="用户ID：">
+                <el-input v-model="searchForm.userId"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="phone" label="手机号：">
-                <el-input v-model="searchForm.phone"/>
+              <el-form-item prop="userName" label="用户姓名：">
+                <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="name" label="姓名：">
-                <el-input v-model="searchForm.name"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item prop="name" label="银行卡号：">
-                <el-input v-model="searchForm.idCard"/>
+              <el-form-item prop="mobile" label="用户手机号：">
+                <el-input v-model="searchForm.mobile"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="name" label="添加时间：">
+              <el-form-item prop="name" label="提交时间：">
                 <el-date-picker
-                  v-model="searchForm.register"
+                  v-model="searchForm.time"
                   style="width: 100%"
                   type="daterange"
                   range-separator="至"
@@ -35,18 +30,9 @@
                   end-placeholder="结束日期"/>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item prop="roles" label="状态：">
-                <el-select v-model="searchForm.black" class="filter-item">
-                  <el-option label="全部" value="全部"/>
-                  <el-option label="生效" value="生效"/>
-                  <el-option label="失效" value="失效"/>
-                  <el-option label="已删除" value="已删除"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+              <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
               <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
             </el-col>
           </el-row>
@@ -161,8 +147,7 @@ const searchFormBase = {
   userId: '',
   userName: '',
   mobile: '',
-  beginTime: '',
-  endTime: ''
+  time: ['', '']
 }
 const dialogFormBase = {
   name: '',
@@ -205,6 +190,7 @@ export default {
       console.log(this.paging)
       this.listLoading = true
       this.$http.post('user/findBankList', {
+        ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
@@ -216,11 +202,31 @@ export default {
         this.listLoading = false
       })
     },
+    formatSearch() {
+      const data = {}
+      for (const key in this.searchForm) {
+        if (key === 'time') {
+          if (this.searchForm['time'][0]) {
+            data.beginTime = this.searchForm.time[0]
+            data.endTime = this.searchForm.time[1]
+            // data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
+            // data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
+          }
+        } else {
+          data[key] = this.searchForm[key]
+        }
+      }
+      return data
+    },
     resetPaging() {
       this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()
+      this.queryList()
+    },
+    handleResetSearch() {
+      this.searchForm = Object.assign({}, searchFormBase)
     },
     handleCancel() {
       this.closeForm()

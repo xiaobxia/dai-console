@@ -72,9 +72,10 @@
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="170">
+        <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+            <el-button type="warning" size="mini" @click="handleSetRoles(scope.row)">设置角色</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -104,6 +105,15 @@
         <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
       </span>
     </el-dialog>
+    <el-dialog :visible.sync="dialogSetRolesFormVisible" title="设置角色" @closed="handleSetRolesCancel">
+      <div>
+        <el-checkbox v-for="item in rolesCheckBoxList" :key="item.id" v-model="item.checked" :label="item.name" border/>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleSetRolesCancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="handleSetRolesConfirm">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -131,6 +141,7 @@ export default {
       searchLoading: false,
       loading: false,
       listLoading: false,
+      dialogSetRolesFormVisible: false,
       dialogFormVisible: false,
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
@@ -148,7 +159,13 @@ export default {
       paging: {
         pageNo: 1,
         pageSize: 10
-      }
+      },
+      currentUserId: '',
+      rolesCheckBoxList: [{
+        name: '',
+        id: '',
+        checked: false
+      }]
     }
   },
   computed: {
@@ -216,6 +233,50 @@ export default {
     handleCancel() {
       this.closeForm()
     },
+    handleSetRoles(row) {
+      this.dialogSetRolesFormVisible = true
+      this.currentUserId = row.id
+      this.$http.get(`userInfo/setRolesPage/${row.id}`).then((res) => {
+        const rolesList = JSON.parse(res.data || '[]')
+        const newList = []
+        rolesList.map((item) => {
+          newList.push({
+            name: item.text,
+            id: item.id,
+            checked: item.state && item.state.checked
+          })
+        })
+        this.rolesCheckBoxList = newList
+      })
+    },
+    handleSetRolesCancel() {
+      this.dialogSetRolesFormVisible = false
+      this.currentUserId = ''
+      this.rolesCheckBoxList = [{
+        name: '',
+        id: '',
+        checked: false
+      }]
+    },
+    handleSetRolesConfirm() {
+      const rolesIds = []
+      for (let i = 0; i < this.rolesCheckBoxList.length; i++) {
+        if (this.rolesCheckBoxList[i].checked) {
+          rolesIds.push(this.rolesCheckBoxList[i].id)
+        }
+      }
+      this.$http.post(`userInfo/setRoles`, {
+        id: this.currentUserId,
+        rostr: rolesIds.join(',')
+      }).then((res) => {
+        this.$message({
+          type: 'success',
+          message: '设置成功!'
+        })
+        this.handleSetRolesCancel()
+      })
+      console.log()
+    },
     handleCreate() {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'add'
@@ -269,3 +330,8 @@ export default {
   }
 }
 </script>
+<style>
+  .el-checkbox.is-bordered+.el-checkbox.is-bordered{
+    margin: 0;
+  }
+</style>

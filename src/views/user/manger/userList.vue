@@ -10,24 +10,28 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="phone" label="手机号：">
-                <el-input v-model="searchForm.phone"/>
+              <el-form-item prop="userName" label="用户姓名：">
+                <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="name" label="姓名：">
-                <el-input v-model="searchForm.name"/>
+              <el-form-item prop="mobile" label="手机号：">
+                <el-input v-model="searchForm.mobile"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="name" label="身份证：">
-                <el-input v-model="searchForm.idCard"/>
+              <el-form-item prop="identifyState" label="认证状态：" label-width="90px">
+                <el-select v-model="searchForm.identifyState" class="filter-item">
+                  <el-option label="全部" value=""/>
+                  <el-option :value="1" label="已认证"/>
+                  <el-option :value="0" label="待审核"/>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="name" label="注册时间：">
+              <el-form-item prop="time" label="注册时间：">
                 <el-date-picker
-                  v-model="searchForm.register"
+                  v-model="searchForm.time"
                   style="width: 100%"
                   type="daterange"
                   range-separator="至"
@@ -36,8 +40,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="roles" label="是否黑名单：">
-                <el-select v-model="searchForm.black" class="filter-item">
+              <el-form-item prop="qudao" label="渠道：">
+                <el-select v-model="searchForm.qudao" class="filter-item">
                   <el-option label="全部" value="全部"/>
                   <el-option label="是" value="是"/>
                   <el-option label="否" value="否"/>
@@ -45,9 +49,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="roles" label="是否认证：">
-                <el-select v-model="searchForm.roles" class="filter-item">
-                  <el-option label="全部" value="全部"/>
+              <el-form-item prop="blackState" label="是否黑名单：">
+                <el-select v-model="searchForm.blackState" class="filter-item">
+                  <el-option label="全部" value=""/>
                   <el-option label="是" value="是"/>
                   <el-option label="否" value="否"/>
                 </el-select>
@@ -56,6 +60,7 @@
           </el-row>
         </el-form>
         <div style="text-align: right">
+          <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
           <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
         </div>
       </div>
@@ -78,14 +83,39 @@
             <span>{{ scope.row.userName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="公司名称" align="center">
+        <el-table-column label="手机号" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.mobile }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="可借总额度" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.totalMoney }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="剩余可借额度" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.balance }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位名称" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.companyName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" align="center">
+        <el-table-column label="是否黑名单" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.mobile }}</span>
+            <span>{{ formatStateSF(scope.row.blackState) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="认证状态" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatStateRZ(scope.row.identifyState) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="注册渠道" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="设备" align="center">
@@ -93,14 +123,14 @@
             <span>{{ scope.row.device }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="是否黑名单" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.blackState }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="注册时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.addTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="注册IP" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.addIp }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -135,8 +165,7 @@ const searchFormBase = {
   userId: '',
   userName: '',
   mobile: '',
-  beginTime: '',
-  endTime: '',
+  time: ['', ''],
   qudao: '',
   blackState: '',
   identifyState: ''
@@ -178,10 +207,9 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
       this.listLoading = true
       this.$http.post('user/findUserList', {
-        // ...this.searchForm,
+        ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
@@ -192,11 +220,31 @@ export default {
         this.listLoading = false
       })
     },
+    formatSearch() {
+      const data = {}
+      for (const key in this.searchForm) {
+        if (key === 'time') {
+          if (this.searchForm['time'][0]) {
+            data.beginTime = this.searchForm.time[0]
+            data.endTime = this.searchForm.time[1]
+            // data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
+            // data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
+          }
+        } else {
+          data[key] = this.searchForm[key]
+        }
+      }
+      return data
+    },
     resetPaging() {
       this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()
+      this.queryList()
+    },
+    handleResetSearch() {
+      this.searchForm = Object.assign({}, searchFormBase)
     },
     verifyAfterDelete() {
     },

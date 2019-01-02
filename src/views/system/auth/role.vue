@@ -245,6 +245,10 @@ export default {
         authoritys: keys.join(','),
         roleId: this.currentRoleId
       }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '设置成功!'
+        })
         this.setMenuLoading = false
         this.closeSetMenu()
       }).catch(() => {

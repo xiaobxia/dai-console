@@ -24,6 +24,24 @@ Vue.use(Element, {
 
 Vue.prototype.$http = Http
 
+Vue.prototype.formatStateSF = function(state) {
+  if (state === 1) {
+    return '是'
+  } else if (state === 0) {
+    return '否'
+  }
+  return '未知'
+}
+
+Vue.prototype.formatStateRZ = function(state) {
+  if (state === 1) {
+    return '认证'
+  } else if (state === 0) {
+    return '未认证'
+  }
+  return '未知'
+}
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

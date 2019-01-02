@@ -8,8 +8,8 @@
               <el-form-item prop="routeType" label="渠道类型：">
                 <el-select v-model="searchForm.routeType" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option :value="1" label="已认证"/>
-                  <el-option :value="0" label="待审核"/>
+                  <el-option :value="1" label="S"/>
+                  <el-option :value="0" label="A"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -51,12 +51,12 @@
         </el-table-column>
         <el-table-column label="渠道链接" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.routeChannel }}</span>
+            <span>{{ scope.row.routeUrl }}</span>
           </template>
         </el-table-column>
         <el-table-column label="渠道标识" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.routeMark }}</span>
+            <span>{{ scope.row.routeChannel }}</span>
           </template>
         </el-table-column>
         <el-table-column label="渠道负责人" align="center">
@@ -71,7 +71,7 @@
         </el-table-column>
         <el-table-column label="渠道类型" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.routeType }}</span>
+            <span>{{ formatType(scope.row.routeType) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="添加人" align="center">
@@ -95,29 +95,26 @@
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" title="添加渠道" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
-        <el-form-item prop="name" label="用户ID">
-          <el-input v-model="dialogForm.name"/>
+        <el-form-item prop="routeName" label="渠道名称">
+          <el-input v-model="dialogForm.routeName"/>
         </el-form-item>
-        <el-form-item prop="roles" label="开卡银行：">
-          <el-select v-model="searchForm.black" class="filter-item">
-            <el-option label="全部" value="全部"/>
-            <el-option label="生效" value="生效"/>
-            <el-option label="失效" value="失效"/>
-            <el-option label="已删除" value="已删除"/>
+        <el-form-item prop="routeUrl" label="渠道链接">
+          <el-input v-model="dialogForm.routeUrl"/>
+        </el-form-item>
+        <el-form-item prop="routeChannel" label="渠道标识">
+          <el-input v-model="dialogForm.routeChannel"/>
+        </el-form-item>
+        <el-form-item prop="routeLiable" label="渠道负责人">
+          <el-input v-model="dialogForm.routeLiable"/>
+        </el-form-item>
+        <el-form-item prop="routeMark" label="渠道备注">
+          <el-input v-model="dialogForm.routeMark"/>
+        </el-form-item>
+        <el-form-item prop="routeType" label="渠道类型：">
+          <el-select v-model="dialogForm.routeType" class="filter-item">
+            <el-option :value="1" label="S"/>
+            <el-option :value="0" label="A"/>
           </el-select>
-        </el-form-item>
-        <el-form-item prop="roles" label="渠道类型：">
-          <el-select v-model="searchForm.black" class="filter-item">
-            <el-option label="信用卡" value="信用卡"/>
-            <el-option label="储蓄卡" value="储蓄卡"/>
-            <el-option label="未知" value="未知"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="name" label="渠道号">
-          <el-input v-model="dialogForm.name"/>
-        </el-form-item>
-        <el-form-item prop="name" label="预留手机号">
-          <el-input v-model="dialogForm.name"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -136,8 +133,12 @@ const searchFormBase = {
   routeType: ''
 }
 const dialogFormBase = {
-  name: '',
-  phone: ''
+  routeName: '',
+  routeUrl: '',
+  routeChannel: '',
+  routeLiable: '',
+  routeMark: '',
+  routeType: 1
 }
 
 export default {
@@ -193,9 +194,26 @@ export default {
     handleCancel() {
       this.closeForm()
     },
+    handleDelete(row) {
+      this.$http.post('route/updateRoute', {
+        id: row.id,
+        deleted: 1
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      })
+    },
     closeForm() {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
+    },
+    handleEdit(row) {
+      this.dialogFormVisible = true
+      this.dialogFormStatus = 'edit'
+      this.dialogForm = Object.assign({}, row)
+      this.dialogForm.routeType = parseInt(this.dialogForm.routeType || '1')
     },
     handleCreate() {
       this.dialogFormVisible = true
@@ -212,9 +230,19 @@ export default {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.post('ab').then(() => {
+          let data = {}
+          if (this.dialogFormStatus === 'add') {
+            data = this.dialogForm
+          } else {
+            data = this.filterKeys(this.dialogForm, ['addUser', 'addTime'])
+          }
+          this.$http.post(
+            this.dialogFormStatus === 'add' ? 'route/addRoute' : 'route/updateRoute',
+            data
+          ).then(() => {
             this.loading = false
             this.closeForm()
+            this.initPage()
           }).catch(() => {
             this.loading = false
           })
@@ -223,6 +251,14 @@ export default {
           return false
         }
       })
+    },
+    formatType(state) {
+      if (state === '1') {
+        return 'S'
+      } else if (state === '0') {
+        return 'A'
+      }
+      return '未知'
     }
   }
 }

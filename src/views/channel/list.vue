@@ -5,8 +5,22 @@
         <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="100px">
           <el-row :gutter="12">
             <el-col :span="6">
+              <el-form-item prop="routeType" label="渠道类型：">
+                <el-select v-model="searchForm.routeType" class="filter-item">
+                  <el-option label="全部" value=""/>
+                  <el-option :value="1" label="已认证"/>
+                  <el-option :value="0" label="待审核"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item prop="routeName" label="渠道名称：">
                 <el-input v-model="searchForm.routeName"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item prop="routeLiable" label="渠道负责人：">
+                <el-input v-model="searchForm.routeLiable"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -117,7 +131,9 @@
 <script>
 import Pagination from '@/components/Pagination'
 const searchFormBase = {
-  routeName: ''
+  routeName: '',
+  routeLiable: '',
+  routeType: ''
 }
 const dialogFormBase = {
   name: '',

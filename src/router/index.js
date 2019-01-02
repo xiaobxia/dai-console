@@ -204,7 +204,7 @@ export const asyncRouterMap = [
       {
         path: 'quota',
         component: () => import('@/views/user/quota/index'),
-        name: 'userQuota',
+        name: 'UserQuota',
         redirect: 'noredirect',
         meta: {
           title: '额度管理',

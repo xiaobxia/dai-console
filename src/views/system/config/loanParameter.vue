@@ -108,7 +108,7 @@
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加项目':'修改项目'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="80px">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="150px">
         <el-form-item prop="name" label="项目名称：">
           <el-input v-model="dialogForm.name"/>
         </el-form-item>

@@ -19,7 +19,7 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="bankList"
+        :data="channelList"
         border
         fit
         highlight-current-row
@@ -105,9 +105,13 @@ export default {
       dialogFormVisible: false,
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入渠道名称', trigger: 'blur' }]
       },
-      bankList: []
+      channelList: [],
+      paging: {
+        pageNo: 1,
+        pageSize: 10
+      }
     }
   },
   computed: {
@@ -126,7 +130,7 @@ export default {
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.bankList = res.data.list
+        this.channelList = res.data.list
         console.log(res)
       }).catch(() => {
         this.listLoading = false

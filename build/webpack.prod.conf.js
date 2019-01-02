@@ -37,8 +37,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     path: config.build.assetsRoot,
     // filename: utils.assetsPath('js/[name].[chunkhash:8].js'),
     // chunkFilename: utils.assetsPath('js/[name].[chunkhash:8].js')
-    filename: ifCdn ? utils.assetsPath('[name].[chunkhash:8].js'):utils.assetsPath('js/[name].[chunkhash:8].js'),
-    chunkFilename: ifCdn ? utils.assetsPath('[name].[chunkhash:8].js'):utils.assetsPath('js/[name].[chunkhash:8].js')
+    // 坑：生成的name里面带/，结果就变成文件夹了
+    filename: ifCdn ? utils.assetsPath('[chunkhash].js'):utils.assetsPath('js/[chunkhash].js'),
+    chunkFilename: ifCdn ? utils.assetsPath('[chunkhash].js'):utils.assetsPath('js/[chunkhash].js')
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html

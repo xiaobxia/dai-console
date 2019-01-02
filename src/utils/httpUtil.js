@@ -16,7 +16,7 @@ axios.interceptors.request.use(function(config) {
 axios.interceptors.response.use(function(response) {
   if (response.data.errno !== 0) {
     console.error(response.data.errmsg)
-    if (response.data.errno === 501) {
+    if (response.data.errno === 501 || response.data.errno === '200008') {
       storageUtil.initUserInfo({
         isLogin: false
       })

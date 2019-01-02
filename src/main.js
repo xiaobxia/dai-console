@@ -42,6 +42,16 @@ Vue.prototype.formatStateRZ = function(state) {
   return '未知'
 }
 
+Vue.prototype.filterKeys = function(raw, keys) {
+  const data = {}
+  for (const key in raw) {
+    if (keys.indexOf(key) === -1) {
+      data[key] = raw[key]
+    }
+  }
+  return data
+}
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

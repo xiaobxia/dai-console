@@ -35,9 +35,39 @@
             <span>{{ scope.row.routeName }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="渠道链接" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeChannel }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道标识" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeMark }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道负责人" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeLiable }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道备注" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeMark }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.routeType }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="添加人" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.addUser }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="添加时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
@@ -47,8 +77,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" title="添加银行卡" @closed="handleCancel">
+    <el-dialog :visible.sync="dialogFormVisible" title="添加渠道" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="120px">
         <el-form-item prop="name" label="用户ID">
           <el-input v-model="dialogForm.name"/>
@@ -61,14 +92,14 @@
             <el-option label="已删除" value="已删除"/>
           </el-select>
         </el-form-item>
-        <el-form-item prop="roles" label="银行卡类型：">
+        <el-form-item prop="roles" label="渠道类型：">
           <el-select v-model="searchForm.black" class="filter-item">
             <el-option label="信用卡" value="信用卡"/>
             <el-option label="储蓄卡" value="储蓄卡"/>
             <el-option label="未知" value="未知"/>
           </el-select>
         </el-form-item>
-        <el-form-item prop="name" label="银行卡号">
+        <el-form-item prop="name" label="渠道号">
           <el-input v-model="dialogForm.name"/>
         </el-form-item>
         <el-form-item prop="name" label="预留手机号">
@@ -111,7 +142,8 @@ export default {
       paging: {
         pageNo: 1,
         pageSize: 10
-      }
+      },
+      listTotal: 0
     }
   },
   computed: {
@@ -127,10 +159,13 @@ export default {
       console.log(this.paging)
       this.listLoading = true
       this.$http.post('route/routeList', {
+        ...this.searchForm,
         ...this.paging
       }).then((res) => {
         this.listLoading = false
         this.channelList = res.data.list
+        this.listTotal = res.data.total
+        this.currentSize = res.data.list.length
         console.log(res)
       }).catch(() => {
         this.listLoading = false

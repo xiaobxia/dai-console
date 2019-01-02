@@ -143,6 +143,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+import moment from 'moment'
 const searchFormBase = {
   userId: '',
   userName: '',
@@ -207,10 +208,10 @@ export default {
       for (const key in this.searchForm) {
         if (key === 'time') {
           if (this.searchForm['time'][0]) {
-            data.beginTime = this.searchForm.time[0]
-            data.endTime = this.searchForm.time[1]
-            // data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
-            // data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
+            // data.beginTime = this.searchForm.time[0]
+            // data.endTime = this.searchForm.time[1]
+            data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
+            data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
           }
         } else {
           data[key] = this.searchForm[key]

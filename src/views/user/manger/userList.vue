@@ -42,7 +42,7 @@
             <el-col :span="6">
               <el-form-item prop="qudao" label="渠道：">
                 <el-select v-model="searchForm.qudao" class="filter-item">
-                  <el-option label="全部" value="全部"/>
+                  <el-option label="全部" value=""/>
                   <el-option label="是" value="是"/>
                   <el-option label="否" value="否"/>
                 </el-select>
@@ -52,8 +52,8 @@
               <el-form-item prop="blackState" label="是否黑名单：">
                 <el-select v-model="searchForm.blackState" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option label="是" value="是"/>
-                  <el-option label="否" value="否"/>
+                  <el-option :value="1" label="是"/>
+                  <el-option :value="0" label="否"/>
                 </el-select>
               </el-form-item>
             </el-col>

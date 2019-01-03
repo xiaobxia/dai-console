@@ -21,8 +21,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
               <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
+              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
             </el-col>
           </el-row>
         </el-form>

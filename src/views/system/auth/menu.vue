@@ -29,7 +29,7 @@
                   type="text"
                   size="mini"
                   @click="() => editMenu(node, data)">
-                  编辑
+                  修改
                 </el-button>
                 <el-button
                   v-if="!ifNotDelete(data)"

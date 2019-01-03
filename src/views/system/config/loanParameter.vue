@@ -99,8 +99,9 @@
             <span>{{ scope.row.updateTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="250">
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
+            <el-button type="info" size="mini" @click="handleDetail(scope.row)">查看</el-button>
             <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
           </template>
         </el-table-column>

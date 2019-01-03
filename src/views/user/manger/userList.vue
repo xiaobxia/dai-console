@@ -43,8 +43,6 @@
               <el-form-item prop="qudao" label="渠道：">
                 <el-select v-model="searchForm.qudao" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option label="是" value="是"/>
-                  <el-option label="否" value="否"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -135,7 +133,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="170">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleDetail(scope.row)">查看</el-button>
+            <el-button type="info" size="mini" @click="handleDetail(scope.row)">查看</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>

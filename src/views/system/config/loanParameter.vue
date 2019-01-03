@@ -18,7 +18,7 @@
                   <span class="value">  {{ props.row.content }}</span>
                 </el-form-item>
                 <el-form-item label="备注：" style="margin: 0">
-                  <span class="value">  {{ props.row.mark }}</span>
+                  <span class="value">  {{ props.row.remark }}</span>
                 </el-form-item>
               </el-row>
             </el-form>
@@ -214,7 +214,6 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
       this.listLoading = true
       this.$http.post('project/findProjectList', {
         ...this.paging

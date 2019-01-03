@@ -173,7 +173,6 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
       this.listLoading = true
       this.$http.post('route/routeList', {
         ...this.searchForm,

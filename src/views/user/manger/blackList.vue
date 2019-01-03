@@ -114,7 +114,6 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
       this.listLoading = true
       this.$http.post('/article/list').then((res) => {
         this.listLoading = false

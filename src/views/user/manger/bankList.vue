@@ -188,7 +188,6 @@ export default {
       this.queryList()
     },
     queryList() {
-      console.log(this.paging)
       this.listLoading = true
       this.$http.post('user/findBankList', {
         ...this.formatSearch(),

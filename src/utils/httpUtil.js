@@ -21,6 +21,7 @@ axios.interceptors.response.use(function(response) {
         isLogin: false
       })
       router.push('/login')
+      location.reload()
     } else {
       Message({
         message: response.data.errmsg,

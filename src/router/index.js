@@ -467,13 +467,43 @@ export const asyncRouterMap = [
         },
         children: [
           {
-            path: 'userAddressBook',
-            component: () => import('@/views/operate/collection/userAddressBook'),
-            name: 'OperateCollectionUserAddressBook',
+            path: 'toBeAllocatedList',
+            component: () => import('@/views/operate/collection/toBeAllocatedList'),
+            name: 'OperateCollectionToBeAllocatedList',
             meta: {
-              title: '用户通讯录',
+              title: '待分配列表',
               isLeaf: 2,
-              link: '/operate/collection/userAddressBook'
+              link: '/operate/collection/toBeAllocatedList'
+            }
+          },
+          {
+            path: 'myOrder',
+            component: () => import('@/views/operate/collection/myOrder'),
+            name: 'OperateCollectionMyOrder',
+            meta: {
+              title: '我的订单',
+              isLeaf: 2,
+              link: '/operate/collection/myOrder'
+            }
+          },
+          {
+            path: 'collectionManList',
+            component: () => import('@/views/operate/collection/collectionManList'),
+            name: 'OperateCollectionCollectionManList',
+            meta: {
+              title: '催收专员列表',
+              isLeaf: 2,
+              link: '/operate/collection/collectionManList'
+            }
+          },
+          {
+            path: 'allotRecordList',
+            component: () => import('@/views/operate/collection/allotRecordList'),
+            name: 'OperateCollectionAllotRecordList',
+            meta: {
+              title: '订单分配记录',
+              isLeaf: 2,
+              link: '/operate/collection/allotRecordList'
             }
           },
           {

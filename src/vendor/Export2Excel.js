@@ -113,7 +113,7 @@ function s2ab(s) {
   return buf;
 }
 
-export function export_table_to_excel(id) {
+function export_table_to_excel(id) {
   var theTable = document.getElementById(id);
   var oo = generateArray(theTable);
   var ranges = oo[1];
@@ -144,7 +144,7 @@ export function export_table_to_excel(id) {
   }), "test.xlsx")
 }
 
-export function export_json_to_excel({
+function export_json_to_excel({
   header,
   data,
   filename,
@@ -204,3 +204,10 @@ export function export_json_to_excel({
     type: "application/octet-stream"
   }), `${filename}.${bookType}`);
 }
+
+const excel = {
+  export_json_to_excel,
+  export_table_to_excel
+}
+
+export default excel

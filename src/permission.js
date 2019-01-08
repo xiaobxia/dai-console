@@ -11,6 +11,7 @@ NProgress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   NProgress.start()
   console.log('beforeEach')
+  console.log(to)
   const userInfo = storageUtil.getUserInfo()
   if (userInfo.isLogin === true) {
     // 登入了还去登录，直接转首页
@@ -30,34 +31,6 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true })
           })
         } else {
-          // const aa = JSON.stringify([
-          //   {
-          //     name: '系统管理',
-          //     child: [
-          //       {
-          //         name: '权限管理',
-          //         child: [
-          //           {
-          //             name: '管理员列表',
-          //             url: '/permission/sysUserInfoPageData'
-          //           },
-          //           {
-          //             name: '角色列表',
-          //             url: '/permission/sysRoleInfoPageData'
-          //           },
-          //           {
-          //             name: '菜单列表',
-          //             url: '/permission/sysMenuInfoPageData'
-          //           },
-          //           {
-          //             name: '菜单按钮列表',
-          //             url: '/permission/sysButtonInfoPageData'
-          //           }
-          //         ]
-          //       }
-          //     ]
-          //   }
-          // ])
           // 后端返还
           Http.get('userInfo/mainPage').then((res) => {
             const menuList = JSON.parse(res.data)

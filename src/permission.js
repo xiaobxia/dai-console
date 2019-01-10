@@ -64,7 +64,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next(`/login?redirect=${to.path}`)
       NProgress.done()
-      location.reload()
     }
   }
 })

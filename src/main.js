@@ -18,28 +18,17 @@ import './mock' // simulation data
 
 import * as filters from './filters' // global filters
 
+import format from './format'
+
 Vue.use(Element, {
   size: 'medium'
 })
 
 Vue.prototype.$http = Http
 
-Vue.prototype.formatStateSF = function(state) {
-  if (state === 1) {
-    return '是'
-  } else if (state === 0) {
-    return '否'
-  }
-  return '未知'
-}
-
-Vue.prototype.formatStateRZ = function(state) {
-  if (state === 1) {
-    return '认证'
-  } else if (state === 0) {
-    return '未认证'
-  }
-  return '未知'
+// 格式化
+for (const key in format) {
+  Vue.prototype[key] = format[key]
 }
 
 Vue.prototype.filterKeys = function(raw, keys) {

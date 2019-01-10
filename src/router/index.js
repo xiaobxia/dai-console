@@ -507,6 +507,16 @@ export const asyncRouterMap = [
             }
           },
           {
+            path: 'informList',
+            component: () => import('@/views/operate/collection/informList'),
+            name: 'OperateCollectionInformList',
+            meta: {
+              title: '通知财务列表',
+              isLeaf: 2,
+              link: '/operate/collection/informList'
+            }
+          },
+          {
             path: 'shouldRepaymentList',
             component: () => import('@/views/operate/collection/shouldRepaymentList'),
             name: 'OperateCollectionShouldRepaymentList',

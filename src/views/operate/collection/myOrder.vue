@@ -103,6 +103,8 @@
             <el-button type="info">用户通讯录</el-button>
             <el-button type="info">通讯记录</el-button>
             <el-button type="info">运营商报告</el-button>
+            <el-button type="info" @click="handleShowCollectionRecord(props.row)">催收记录</el-button>
+            <el-button type="primary" @click="handleAddCollectionRecord(props.row)">添加催收记录</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,6 +117,13 @@
         <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
       </span>
     </el-dialog>
+    <el-dialog :visible.sync="dialogCollectionRecordVisible" title="催收记录" @closed="handleCancelCollectionRecord">
+      <collection-record-small :collection-record="collectionRecord" :list-loading="collectionRecordLoading"/>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleCancelCollectionRecord">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="handleConfirmCollectionRecord">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -123,6 +132,7 @@ import Pagination from '@/components/Pagination'
 import moment from 'moment'
 import excel from '@/vendor/Export2Excel'
 import OperateCollectionCollectionManListSmall from './collectionManListSmall.vue'
+import CollectionRecordSmall from './collectionRecordSmall.vue'
 
 const searchFormBase = {
   backTime: '',
@@ -133,17 +143,20 @@ const searchFormBase = {
 
 export default {
   name: 'OperateCollectionMyOrder',
-  components: { OperateCollectionCollectionManListSmall, Pagination },
+  components: { OperateCollectionCollectionManListSmall, Pagination, CollectionRecordSmall },
   data() {
     return {
       searchLoading: false,
       loading: false,
       listLoading: false,
+      collectionRecordLoading: false,
       downloadLoading: false,
       dialogVisible: false,
+      dialogCollectionRecordVisible: false,
       dialogType: 'all',
       searchForm: Object.assign({}, searchFormBase),
       myOrderList: [],
+      collectionRecord: [],
       multipleSelection: [],
       listTotal: 0,
       paging: {
@@ -296,6 +309,32 @@ export default {
       }).catch(() => {
         this.loading = false
       })
+    },
+    queryCollectionRecord(id) {
+      this.collectionRecordLoading = true
+      this.$http.post('collection/collectionrecordlist', {
+        repaymentId: id,
+        pageNo: 1,
+        pageSize: 10
+      }).then((res) => {
+        this.collectionRecordLoading = false
+        this.collectionRecord = res.data.list
+      }).catch(() => {
+        this.collectionRecordLoading = false
+      })
+    },
+    handleShowCollectionRecord(row) {
+      this.dialogCollectionRecordVisible = true
+      this.queryCollectionRecord(row.repaymentId)
+    },
+    handleCancelCollectionRecord() {
+      this.dialogCollectionRecordVisible = false
+    },
+    handleConfirmCollectionRecord() {
+      this.dialogCollectionRecordVisible = false
+    },
+    handleAddCollectionRecord(row) {
+
     }
   }
 }

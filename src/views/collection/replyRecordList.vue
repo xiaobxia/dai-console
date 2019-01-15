@@ -10,7 +10,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="userName" label="催收人员姓名：" label-width="120px">
+              <el-form-item prop="userName" label="领取人姓名：" label-width="120px">
                 <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
@@ -35,7 +35,7 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="allotRecordList"
+        :data="replyList"
         border
         fit
         highlight-current-row
@@ -46,12 +46,12 @@
             <span>{{ scope.row.repaymentId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收人员ID" align="center" width="100">
+        <el-table-column label="领取人ID" align="center" width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收人员姓名" align="center">
+        <el-table-column label="领取人姓名" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }}</span>
           </template>
@@ -77,7 +77,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'OperateCollectionAllotRecordList',
+  name: 'CollectionReplyRecordList',
   components: { Pagination },
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
       loading: false,
       listLoading: false,
       searchForm: Object.assign({}, searchFormBase),
-      allotRecordList: [],
+      replyList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -105,12 +105,12 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/allotRecord', {
-        ...this.formatSearch(),
+      this.$http.post('cashloan/replyrecord', {
+        // ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.allotRecordList = res.data.list
+        this.replyList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {

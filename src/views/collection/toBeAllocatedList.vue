@@ -35,13 +35,13 @@
           <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
           <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
           <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-          <el-button class="filter-item" icon="el-icon-more" type="primary" @click="handleAllotAll">转派</el-button>
+          <el-button class="filter-item" icon="el-icon-more" type="primary" @click="handleAllotAll">分配</el-button>
         </div>
       </div>
       <el-table
         v-loading="listLoading"
         key="repaymentId"
-        :data="myOrderList"
+        :data="allocatedList"
         border
         fit
         highlight-current-row
@@ -97,31 +97,19 @@
             <span>{{ scope.row.routeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column type="expand" label="其他操作" width="100">
-          <template slot-scope="props">
-            <el-button type="info">用户详情</el-button>
-            <el-button type="info">用户通讯录</el-button>
-            <el-button type="info">通讯记录</el-button>
-            <el-button type="info">运营商报告</el-button>
-            <el-button type="info" @click="handleShowCollectionRecord(props.row)">催收记录</el-button>
-            <el-button type="primary" @click="handleAddCollectionRecord(props.row)">添加催收记录</el-button>
-          </template>
-        </el-table-column>
+        <!--<el-table-column label="操作" align="center" width="80">-->
+        <!--<template slot-scope="scope">-->
+        <!--<el-button type="primary" size="mini" @click="handleAllotOne(scope.row)">分配</el-button>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogVisible" title="转派" @closed="handleCancel">
-      <operate-collection-collection-man-list-small :rowchange="useRowChange"/>
+    <el-dialog :visible.sync="dialogVisible" title="分配" @closed="handleCancel">
+      <转派collection-collection-man-list-small :rowchange="useRowChange"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
         <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog :visible.sync="dialogCollectionRecordVisible" title="催收记录" @closed="handleCancelCollectionRecord">
-      <collection-record-small :collection-record="collectionRecord" :list-loading="collectionRecordLoading"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancelCollectionRecord">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="handleConfirmCollectionRecord">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -131,8 +119,7 @@
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
 import excel from '@/vendor/Export2Excel'
-import OperateCollectionCollectionManListSmall from './collectionManListSmall.vue'
-import CollectionRecordSmall from './collectionRecordSmall.vue'
+import 转派CollectionCollectionManListSmall from './collectionManListSmall.vue'
 
 const searchFormBase = {
   backTime: '',
@@ -142,21 +129,18 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'OperateCollectionMyOrder',
-  components: { OperateCollectionCollectionManListSmall, Pagination, CollectionRecordSmall },
+  name: 'CollectionToBeAllocatedList',
+  components: { 转派CollectionCollectionManListSmall, Pagination },
   data() {
     return {
       searchLoading: false,
       loading: false,
       listLoading: false,
-      collectionRecordLoading: false,
       downloadLoading: false,
       dialogVisible: false,
-      dialogCollectionRecordVisible: false,
       dialogType: 'all',
       searchForm: Object.assign({}, searchFormBase),
-      myOrderList: [],
-      collectionRecord: [],
+      allocatedList: [],
       multipleSelection: [],
       listTotal: 0,
       paging: {
@@ -179,12 +163,12 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/myorder', {
+      this.$http.post('collection/waitallot', {
         ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.myOrderList = res.data.list
+        this.allocatedList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {
@@ -241,7 +225,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '我的订单',
+          filename: '待还款列表',
           autoWidth: true,
           bookType: 'xlsx'
         })
@@ -286,7 +270,7 @@ export default {
         return
       }
       const data = {
-        type: 1,
+        type: 0,
         userId: this.selectUserId
       }
       if (this.dialogType === 'one') {
@@ -309,32 +293,6 @@ export default {
       }).catch(() => {
         this.loading = false
       })
-    },
-    queryCollectionRecord(id) {
-      this.collectionRecordLoading = true
-      this.$http.post('collection/collectionrecordlist', {
-        repaymentId: id,
-        pageNo: 1,
-        pageSize: 10
-      }).then((res) => {
-        this.collectionRecordLoading = false
-        this.collectionRecord = res.data.list
-      }).catch(() => {
-        this.collectionRecordLoading = false
-      })
-    },
-    handleShowCollectionRecord(row) {
-      this.dialogCollectionRecordVisible = true
-      this.queryCollectionRecord(row.repaymentId)
-    },
-    handleCancelCollectionRecord() {
-      this.dialogCollectionRecordVisible = false
-    },
-    handleConfirmCollectionRecord() {
-      this.dialogCollectionRecordVisible = false
-    },
-    handleAddCollectionRecord(row) {
-
     }
   }
 }

@@ -81,7 +81,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'OperateCollectionCollectionManListSmall',
+  name: 'CollectionCollectionManListSmall',
   components: { Pagination },
   props: {
     rowchange: {

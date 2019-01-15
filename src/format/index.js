@@ -37,6 +37,45 @@ const format = {
         break
     }
     return text
+  },
+  formatPayType(state) {
+    let text = '未知'
+    switch (state) {
+      case 0:
+        text = '微信支付'
+        break
+      case 1:
+        text = '支付宝支付'
+        break
+    }
+    return text
+  },
+  formatConfirm(state) {
+    let text = '未知'
+    switch (state) {
+      case 0:
+        text = '审核通过'
+        break
+      case 1:
+        text = '审核未通过'
+        break
+      case 2:
+        text = '等待审核'
+        break
+    }
+    return text
+  },
+  formatInform(state) {
+    let text = '未知'
+    switch (state) {
+      case 0:
+        text = '未通知'
+        break
+      case 1:
+        text = '已通知'
+        break
+    }
+    return text
   }
 }
 

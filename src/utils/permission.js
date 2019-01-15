@@ -74,6 +74,9 @@ function checkPermissionBackend(userRouter, current) {
   let lastLink = ''
   const meta = current.meta
   if (meta.isLeaf === 2) {
+    if (meta.allHas) {
+      return meta.link
+    }
     if (checkInUserRouter(userRouter, meta.link)) {
       return meta.link
     }
@@ -93,12 +96,15 @@ function checkPermissionBackend(userRouter, current) {
 }
 
 function checkPermissionInFlat(flatUserRouters, current) {
+  if (current.meta.allHas) {
+    return true
+  }
   for (let i = 0; i < flatUserRouters.length; i++) {
-    if (isSamePath(flatUserRouters[i], current.path)) {
+    if (isSamePath(flatUserRouters[i], current.path) || isSamePath(flatUserRouters[i], current.meta.link)) {
       return true
     }
   }
-  return true
+  return false
 }
 
 function getTitle(userRouter, path, level, nowLevel) {

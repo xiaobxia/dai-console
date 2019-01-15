@@ -128,7 +128,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'OperateCollectionInformList',
+  name: 'CollectionCollectionList',
   components: { Pagination },
   data() {
     return {
@@ -166,9 +166,9 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/informlist', {
+      this.$http.post('collection/collectionrecordlist', {
         // ...this.searchForm,
-        // ...this.paging
+        ...this.paging
       }).then((res) => {
         this.listLoading = false
         this.informList = res.data.list

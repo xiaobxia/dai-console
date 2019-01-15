@@ -5,17 +5,17 @@
         <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="name" label="姓名：">
-                <el-input v-model="searchForm.name"/>
+              <el-form-item prop="repaymentId" label="订单ID：" label-width="70px">
+                <el-input v-model="searchForm.repaymentId"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="phone" label="手机号：">
-                <el-input v-model="searchForm.phone"/>
+              <el-form-item prop="userName" label="领取人姓名：" label-width="120px">
+                <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="time" label="创建时间：">
+              <el-form-item prop="time" label="分配时间：">
                 <el-date-picker
                   v-model="searchForm.time"
                   style="width: 100%"
@@ -35,35 +35,30 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="collectionUserList"
+        :data="allotRecordList"
         border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="ID" align="center" width="80">
+        <el-table-column label="订单ID" align="center" width="80">
+          <template slot-scope="scope">
+            <span>{{ scope.row.repaymentId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="领取人ID" align="center" width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" align="center">
+        <el-table-column label="领取人姓名" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.userName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" align="center">
+        <el-table-column label="分配时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.phone }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="邮件" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.email }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="添加时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.addTime }}</span>
+            <span>{{ scope.row.allotTime }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -76,13 +71,13 @@
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
 const searchFormBase = {
-  name: '',
-  phone: '',
+  repaymentId: '',
+  userName: '',
   time: ['', '']
 }
 
 export default {
-  name: 'OperateCollectionCollectionManList',
+  name: 'CollectionAllotRecordList',
   components: { Pagination },
   data() {
     return {
@@ -90,7 +85,7 @@ export default {
       loading: false,
       listLoading: false,
       searchForm: Object.assign({}, searchFormBase),
-      collectionUserList: [],
+      allotRecordList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -110,12 +105,12 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/collectionUser', {
+      this.$http.post('collection/allotRecord', {
         ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.collectionUserList = res.data.list
+        this.allotRecordList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {

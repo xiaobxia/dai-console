@@ -16,6 +16,7 @@ module.exports = {
       // },
       "/xhb": {
         "target": "http://139.196.88.8/"
+        // "target": "http://192.168.1.49/"
         // "target": "http://localhost:3010/"
       }
     },

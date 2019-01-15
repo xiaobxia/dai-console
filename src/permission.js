@@ -34,7 +34,6 @@ router.beforeEach((to, from, next) => {
           // 后端返还
           Http.get('userInfo/mainPage').then((res) => {
             const menuList = JSON.parse(res.data)
-            console.log(menuList)
             store.dispatch('CreateFlatUserRouters', menuList)
             store.dispatch('GenerateRoutesBackend', menuList).then(() => {
               console.log('生成菜单')
@@ -44,17 +43,18 @@ router.beforeEach((to, from, next) => {
             })
           })
         }
-      }
-      let permission = false
-      if (all) {
-        permission = permissionUtil.checkPermission(userInfo.roles, to)
       } else {
-        permission = permissionUtil.checkPermissionInFlat(store.getters.flatUserRouters, to)
-      }
-      if (permission) {
-        next()
-      } else {
-        next({ path: '/401', replace: true, query: { noGoBack: true }})
+        let permission = false
+        if (all) {
+          permission = permissionUtil.checkPermission(userInfo.roles, to)
+        } else {
+          permission = permissionUtil.checkPermissionInFlat(store.getters.flatUserRouters, to)
+        }
+        if (permission) {
+          next()
+        } else {
+          next({ path: '/401', replace: true, query: { noGoBack: true }})
+        }
       }
     }
   } else {

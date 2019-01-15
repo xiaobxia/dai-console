@@ -62,6 +62,7 @@ const permission = {
       routers = routers.concat([{ path: '*', redirect: '/404', hidden: true }])
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
+      console.log(constantRouterMap.concat(routers))
     },
     SET_FLAT_USR_ROUTERS: (state, routers) => {
       state.flatUserRouters = routers

@@ -15,7 +15,10 @@ export const constantRouterMap = [
     children: [
       {
         path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
+        component: () => import('@/views/redirect/index'),
+        meta: {
+          allHas: true
+        }
       }
     ]
   },
@@ -32,18 +35,25 @@ export const constantRouterMap = [
     component: () => import('@/views/login/authredirect'),
     hidden: true,
     meta: {
+      allHas: true,
       auth: false
     }
   },
   {
     path: '/404',
     component: () => import('@/views/errorPage/404'),
-    hidden: true
+    hidden: true,
+    meta: {
+      allHas: true
+    }
   },
   {
     path: '/401',
     component: () => import('@/views/errorPage/401'),
-    hidden: true
+    hidden: true,
+    meta: {
+      allHas: true
+    }
   },
   {
     path: '',
@@ -55,6 +65,7 @@ export const constantRouterMap = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: {
+          allHas: true,
           title: '首页',
           icon: 'fas fa-home'
         }
@@ -391,6 +402,110 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/collection',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'Collection',
+    meta: {
+      title: '催收管理',
+      isLeaf: 1,
+      link: '/collection'
+    },
+    children: [
+      {
+        path: 'toBeAllocatedList',
+        component: () => import('@/views/collection/toBeAllocatedList'),
+        name: 'CollectionToBeAllocatedList',
+        meta: {
+          title: '待分配列表',
+          isLeaf: 2,
+          link: '/collection/toBeAllocatedList'
+        }
+      },
+      {
+        path: 'myOrder',
+        component: () => import('@/views/collection/myOrder'),
+        name: 'CollectionMyOrder',
+        meta: {
+          title: '我的订单',
+          isLeaf: 2,
+          link: '/collection/myOrder'
+        }
+      },
+      {
+        path: 'userAddressBook',
+        component: () => import('@/views/collection/userAddressBook'),
+        name: 'CollectionUserAddressBook',
+        hidden: true,
+        meta: {
+          title: '用户通讯录',
+          isLeaf: 2,
+          link: '/collection/myOrder'
+        }
+      },
+      {
+        path: 'allotRecordList',
+        component: () => import('@/views/collection/allotRecordList'),
+        name: 'CollectionAllotRecordList',
+        meta: {
+          title: '订单分配记录',
+          isLeaf: 2,
+          link: '/collection/allotRecordList'
+        }
+      },
+      {
+        path: 'collectionList',
+        component: () => import('@/views/collection/collectionList'),
+        name: 'CollectionCollectionList',
+        meta: {
+          title: '我的催收记录',
+          isLeaf: 2,
+          link: '/collection/collectionList'
+        }
+      },
+      {
+        path: 'successRecordList',
+        component: () => import('@/views/collection/successRecordList'),
+        name: 'CollectionSuccessRecordList',
+        meta: {
+          title: '催收成功列表',
+          isLeaf: 2,
+          link: '/collection/successRecordList'
+        }
+      },
+      {
+        path: 'replyRecordList',
+        component: () => import('@/views/collection/replyRecordList'),
+        name: 'CollectionReplyRecordList',
+        meta: {
+          title: '用户还款记录',
+          isLeaf: 2,
+          link: '/collection/replyRecordList'
+        }
+      },
+      {
+        path: 'collectionManList',
+        component: () => import('@/views/collection/collectionManList'),
+        name: 'CollectionCollectionManList',
+        meta: {
+          title: '催收专员列表',
+          isLeaf: 2,
+          link: '/collection/collectionManList'
+        }
+      },
+      {
+        path: 'informList',
+        component: () => import('@/views/collection/informList'),
+        name: 'CollectionInformList',
+        meta: {
+          title: '通知财务列表',
+          isLeaf: 2,
+          link: '/collection/informList'
+        }
+      }
+    ]
+  },
+  {
     path: '/operate',
     component: Layout,
     redirect: 'noredirect',
@@ -451,89 +566,6 @@ export const asyncRouterMap = [
               title: '活动管理',
               isLeaf: 2,
               link: '/operate/content/activity'
-            }
-          }
-        ]
-      },
-      {
-        path: 'collection',
-        component: () => import('@/views/operate/collection/index'),
-        name: 'OperateCollection',
-        redirect: 'noredirect',
-        meta: {
-          title: '催收管理',
-          isLeaf: 1,
-          link: '/operate/collection'
-        },
-        children: [
-          {
-            path: 'toBeAllocatedList',
-            component: () => import('@/views/operate/collection/toBeAllocatedList'),
-            name: 'OperateCollectionToBeAllocatedList',
-            meta: {
-              title: '待分配列表',
-              isLeaf: 2,
-              link: '/operate/collection/toBeAllocatedList'
-            }
-          },
-          {
-            path: 'myOrder',
-            component: () => import('@/views/operate/collection/myOrder'),
-            name: 'OperateCollectionMyOrder',
-            meta: {
-              title: '我的订单',
-              isLeaf: 2,
-              link: '/operate/collection/myOrder'
-            }
-          },
-          {
-            path: 'collectionManList',
-            component: () => import('@/views/operate/collection/collectionManList'),
-            name: 'OperateCollectionCollectionManList',
-            meta: {
-              title: '催收专员列表',
-              isLeaf: 2,
-              link: '/operate/collection/collectionManList'
-            }
-          },
-          {
-            path: 'allotRecordList',
-            component: () => import('@/views/operate/collection/allotRecordList'),
-            name: 'OperateCollectionAllotRecordList',
-            meta: {
-              title: '订单分配记录',
-              isLeaf: 2,
-              link: '/operate/collection/allotRecordList'
-            }
-          },
-          {
-            path: 'informList',
-            component: () => import('@/views/operate/collection/informList'),
-            name: 'OperateCollectionInformList',
-            meta: {
-              title: '通知财务列表',
-              isLeaf: 2,
-              link: '/operate/collection/informList'
-            }
-          },
-          {
-            path: 'shouldRepaymentList',
-            component: () => import('@/views/operate/collection/shouldRepaymentList'),
-            name: 'OperateCollectionShouldRepaymentList',
-            meta: {
-              title: '待还款列表',
-              isLeaf: 2,
-              link: '/operate/collection/shouldRepaymentList'
-            }
-          },
-          {
-            path: 'overdueList',
-            component: () => import('@/views/operate/collection/overdueList'),
-            name: 'OperateCollectionOverdueList',
-            meta: {
-              title: '逾期列表',
-              isLeaf: 2,
-              link: '/operate/collection/overdueList'
             }
           }
         ]

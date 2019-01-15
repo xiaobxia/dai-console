@@ -494,13 +494,13 @@ export const asyncRouterMap = [
         }
       },
       {
-        path: 'informList',
-        component: () => import('@/views/collection/informList'),
-        name: 'CollectionInformList',
+        path: 'otherPayTypeList',
+        component: () => import('@/views/collection/otherPayTypeList'),
+        name: 'CollectionOtherPayTypeList',
         meta: {
-          title: '通知财务列表',
+          title: '支付宝微信还款管理',
           isLeaf: 2,
-          link: '/collection/informList'
+          link: '/collection/otherPayTypeList'
         }
       }
     ]

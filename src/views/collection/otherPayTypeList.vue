@@ -24,8 +24,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="pay_cno" label="支付订单号：" label-width="100px">
-                <el-input v-model="searchForm.pay_cno"/>
+              <el-form-item prop="isConfirm" label="审核状态：" label-width="90px">
+                <el-select v-model="searchForm.isConfirm" class="filter-item">
+                  <el-option label="全部" value=""/>
+                  <el-option :value="0" label="审核通过"/>
+                  <el-option :value="1" label="审核未通过"/>
+                  <el-option :value="2" label="等待审核"/>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,11 +95,11 @@
             <span>{{ scope.row.payTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="通知财务" align="center">
-          <template slot-scope="scope">
-            <span>{{ formatInform(scope.row.isInform) }}</span>
-          </template>
-        </el-table-column>
+        <!--<el-table-column label="通知财务" align="center">-->
+        <!--<template slot-scope="scope">-->
+        <!--<span>{{ formatInform(scope.row.isInform) }}</span>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">
             <span>{{ formatConfirm(scope.row.isConfirm) }}</span>
@@ -158,11 +163,11 @@ const searchFormBase = {
   repaymentId: '',
   payMobile: '',
   payType: '',
-  pay_cno: ''
+  isConfirm: ''
 }
 
 export default {
-  name: 'CollectionInformList',
+  name: 'CollectionOtherPayTypeList',
   components: { Pagination },
   data() {
     return {

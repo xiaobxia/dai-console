@@ -103,8 +103,6 @@
             <el-button type="info" @click="handleToUserAddressBook(props.row)">用户通讯录</el-button>
             <el-button type="info">通讯记录</el-button>
             <el-button type="info">运营商报告</el-button>
-            <el-button type="info" @click="handleShowCollectionRecord(props.row)">催收记录</el-button>
-            <el-button type="primary" @click="handleAddCollectionRecord(props.row)">添加催收记录</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -337,7 +335,7 @@ export default {
 
     },
     handleToUserAddressBook(row) {
-      this.$router.push({ name: '转派CollectionUserAddressBook', query: { userId: row.cashId }})
+      this.$router.push({ name: 'CollectionUserAddressBook', query: { userId: row.cashId }})
     }
   }
 }

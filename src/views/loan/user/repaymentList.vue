@@ -77,7 +77,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'LoadUserHasRepaymentList',
+  name: 'LoadUserRepaymentList',
   components: { Pagination },
   data() {
     return {

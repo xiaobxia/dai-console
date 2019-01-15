@@ -234,6 +234,16 @@ export const asyncRouterMap = [
             }
           },
           {
+            path: 'dayToDayList',
+            component: () => import('@/views/user/quota/dayToDayList'),
+            name: 'UserQuotaDayToDayList',
+            meta: {
+              title: '用户额度流水',
+              isLeaf: 2,
+              link: '/user/quota/dayToDayList'
+            }
+          },
+          {
             path: 'auditing',
             component: () => import('@/views/user/quota/auditing'),
             name: 'UserQuotaAuditing',
@@ -331,6 +341,16 @@ export const asyncRouterMap = [
               title: '已还款列表',
               isLeaf: 2,
               link: '/loan/user/hasRepaymentList'
+            }
+          },
+          {
+            path: 'repaymentList',
+            component: () => import('@/views/loan/user/repaymentList'),
+            name: 'LoadUserRepaymentList',
+            meta: {
+              title: '还款记录列表',
+              isLeaf: 2,
+              link: '/loan/user/repaymentList'
             }
           },
           {

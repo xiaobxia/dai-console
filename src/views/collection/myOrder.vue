@@ -109,7 +109,7 @@
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogVisible" title="转派" @closed="handleCancel">
-      <转派collection-collection-man-list-small :rowchange="useRowChange"/>
+      <collection-collection-man-list-small :rowchange="useRowChange"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
         <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
@@ -129,7 +129,7 @@
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
 import excel from '@/vendor/Export2Excel'
-import 转派CollectionCollectionManListSmall from './collectionManListSmall.vue'
+import CollectionCollectionManListSmall from './collectionManListSmall.vue'
 import CollectionRecordSmall from './collectionRecordSmall.vue'
 
 const searchFormBase = {
@@ -141,7 +141,7 @@ const searchFormBase = {
 
 export default {
   name: 'CollectionMyOrder',
-  components: { 转派CollectionCollectionManListSmall, Pagination, CollectionRecordSmall },
+  components: { CollectionCollectionManListSmall, Pagination, CollectionRecordSmall },
   data() {
     return {
       searchLoading: false,

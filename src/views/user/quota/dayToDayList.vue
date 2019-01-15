@@ -9,6 +9,17 @@
                 <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-form-item prop="name" label="提交时间：">
+                <el-date-picker
+                  v-model="searchForm.time"
+                  style="width: 100%"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"/>
+              </el-form-item>
+            </el-col>
             <el-col :span="6">
               <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
@@ -19,7 +30,7 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="quotaList"
+        :data="dayToDayList"
         border
         fit
         highlight-current-row
@@ -55,70 +66,24 @@
             <span>{{ scope.row.freezeAmount }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="90">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">调整</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" title="修改额度" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="150px">
-        <el-form-item prop="type" label="类型：">
-          <el-select v-model="dialogForm.type">
-            <el-option :value="0" label="增加"/>
-            <el-option :value="1" label="减少"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="name" label="名称：">
-          <el-select v-model="dialogForm.name">
-            <el-option :value="0" label="提额认证"/>
-            <el-option :value="1" label="后台修改"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="amount" label="操作金额：">
-          <el-input v-model="dialogForm.amount"/>
-        </el-form-item>
-        <el-form-item prop="total" label="原账户总额：">
-          <el-input v-model="dialogForm.total"/>
-        </el-form-item>
-        <el-form-item prop="balance" label="原账户可用余额：">
-          <el-input v-model="dialogForm.balance"/>
-        </el-form-item>
-        <el-form-item prop="freezeAmount" label="冻结金额：">
-          <el-input v-model="dialogForm.freezeAmount"/>
-        </el-form-item>
-        <el-form-item prop="remark" label="备注：">
-          <el-input :autosize="{ minRows: 2}" v-model="dialogForm.remark" type="textarea"/>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
 import excel from '@/vendor/Export2Excel'
+import moment from 'moment'
+
 const searchFormBase = {
-  userName: ''
-}
-const dialogFormBase = {
-  type: 0,
-  name: 0,
-  amount: '',
-  remark: '',
-  total: '',
-  balance: '',
-  freezeAmount: ''
+  userName: '',
+  time: ['', '']
 }
 
 export default {
-  name: 'UserQuotaList',
+  name: 'UserQuotaDayToDayList',
   components: { Pagination },
   data() {
     return {
@@ -126,12 +91,8 @@ export default {
       searchLoading: false,
       loading: false,
       listLoading: false,
-      dialogFormVisible: false,
-      dialogForm: Object.assign({}, dialogFormBase),
       searchForm: Object.assign({}, searchFormBase),
-      dialogFormRules: {
-      },
-      quotaList: [],
+      dayToDayList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -151,17 +112,31 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('user/accountList', {
-        ...this.searchForm,
+      this.$http.post('user/accountLog', {
+        ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.quotaList = res.data.list
+        this.dayToDayList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {
         this.listLoading = false
       })
+    },
+    formatSearch() {
+      const data = {}
+      for (const key in this.searchForm) {
+        if (key === 'time') {
+          if (this.searchForm['time'][0]) {
+            data.beginTime = moment(this.searchForm.time[0]).format('YYYY-MM-DD')
+            data.endTime = moment(this.searchForm.time[1]).format('YYYY-MM-DD')
+          }
+        } else {
+          data[key] = this.searchForm[key]
+        }
+      }
+      return data
     },
     resetPaging() {
       this.paging.pageNo = 1
@@ -173,44 +148,10 @@ export default {
     handleResetSearch() {
       this.searchForm = Object.assign({}, searchFormBase)
     },
-    handleEdit(row) {
-      this.dialogFormVisible = true
-      this.dialogForm = this.copyKeys(dialogFormBase, row)
-      this.dialogForm.id = row.id
-      this.dialogForm.userId = row.userId
-      this.dialogForm.total = row.totalMoney
-    },
-    closeForm() {
-      this.dialogFormVisible = false
-      this.dialogForm = Object.assign({}, dialogFormBase)
-    },
-    handleCancel() {
-      this.closeForm()
-    },
-    handleConfirm() {
-      this.$refs.dialogForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$http.post(
-            'user/updateAccount',
-            this.dialogForm
-          ).then(() => {
-            this.loading = false
-            this.closeForm()
-            this.initPage()
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
     handleExport() {
       this.downloadLoading = true
-      this.$http.post('user/accountList', {
-        ...this.searchForm
+      this.$http.post('user/accountLog', {
+        ...this.formatSearch()
       }).then((res) => {
         const list = res.data.list
         const tHeader = ['用户ID', '用户姓名', '真实姓名', '总额度', '可借额度', '冻结金额']
@@ -219,7 +160,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '用户额度列表',
+          filename: '用户额度流水列表',
           autoWidth: true,
           bookType: 'xlsx'
         })

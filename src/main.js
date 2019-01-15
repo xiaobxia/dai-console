@@ -41,6 +41,18 @@ Vue.prototype.filterKeys = function(raw, keys) {
   return data
 }
 
+Vue.prototype.copyKeys = function(keys, raw) {
+  const data = {}
+  for (const key in keys) {
+    if (raw[key] !== undefined) {
+      data[key] = raw[key]
+    } else {
+      data[key] = keys[key]
+    }
+  }
+  return data
+}
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

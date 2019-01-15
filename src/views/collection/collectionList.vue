@@ -258,15 +258,6 @@ export default {
           return false
         }
       })
-    },
-    formatType(row) {
-      if (row.type === '0') {
-        return '系统公告'
-      } else if (row.type === '1') {
-        return '营销公告'
-      } else {
-        return '未知'
-      }
     }
   }
 }

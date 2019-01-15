@@ -429,7 +429,8 @@ export const asyncRouterMap = [
     meta: {
       title: '催收管理',
       isLeaf: 1,
-      link: '/collection'
+      link: '/collection',
+      icon: 'fas fa-phone'
     },
     children: [
       {

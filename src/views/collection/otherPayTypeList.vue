@@ -156,6 +156,8 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+import moment from 'moment'
+
 const dialogFormBase = {
   repaymentId: '',
   payMobile: '',
@@ -184,8 +186,6 @@ export default {
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        title: [{ required: true, message: '请输入公告标题', trigger: 'blur' }],
-        content: [{ required: true, message: '请输入公告内容', trigger: 'blur' }]
       },
       searchForm: Object.assign({}, searchFormBase),
       informList: [],
@@ -275,10 +275,16 @@ export default {
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
+          const postData = {
+            ...this.dialogForm
+          }
+          if (postData.payTime) {
+            postData.payTime = moment(postData.payTime).format('YYYY-MM-DD HH:mm:ss')
+          }
           this.loading = true
           this.$http.post(
             this.dialogFormStatus === 'add' ? 'collection/informfinance' : '',
-            this.dialogForm
+            postData
           ).then(() => {
             this.loading = false
             this.closeForm()

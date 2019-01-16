@@ -759,6 +759,26 @@ export const asyncRouterMap = [
             }
           },
           {
+            path: 'hasList',
+            component: () => import('@/views/finance/moneyBack/hasList'),
+            name: 'FinanceMoneyBackHasList',
+            meta: {
+              title: '已回款列表',
+              isLeaf: 2,
+              link: '/finance/moneyBack/hasList'
+            }
+          },
+          {
+            path: 'recordList',
+            component: () => import('@/views/finance/moneyBack/recordList'),
+            name: 'FinanceMoneyBackRecordList',
+            meta: {
+              title: '回款记录列表',
+              isLeaf: 2,
+              link: '/finance/moneyBack/recordList'
+            }
+          },
+          {
             path: 'overdueList',
             component: () => import('@/views/finance/moneyBack/overdueList'),
             name: 'FinanceMoneyBackOverdueList',

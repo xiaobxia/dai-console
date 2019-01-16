@@ -48,6 +48,7 @@
         </el-form>
         <div style="text-align: right">
           <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
+          <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
           <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
         </div>
       </div>
@@ -215,7 +216,7 @@ export default {
     },
     handleExport() {
       this.downloadLoading = true
-      this.$http.post('cashloan/cashreply', {
+      this.$http.post('cashloan/replyrecord', {
         ...this.searchForm
       }).then((res) => {
         const list = res.data.list

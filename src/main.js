@@ -53,6 +53,26 @@ Vue.prototype.copyKeys = function(keys, raw) {
   return data
 }
 
+Vue.prototype.formatExport = function(config, list) {
+  const filterVal = []
+  const tHeader = []
+  for (const key in config) {
+    filterVal.push(key)
+    tHeader.push(config[key].name)
+  }
+  const data = list.map(v => filterVal.map(j => {
+    if (config[j].format) {
+      return config[j].format(v[j])
+    }
+    return v[j] || ''
+  }))
+  return {
+    filterVal,
+    tHeader,
+    data
+  }
+}
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

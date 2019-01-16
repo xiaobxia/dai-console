@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
-        <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
+        <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="90px">
           <el-row :gutter="12">
             <el-col :span="6">
               <el-form-item prop="userName" label="用户姓名：">
@@ -14,20 +14,24 @@
                 <el-input v-model="searchForm.realName"/>
               </el-form-item>
             </el-col>
-            <el-form-item prop="name" label="操作：">
-              <el-select v-model="searchForm.name">
-                <el-option value="" label="全部"/>
-                <el-option :value="0" label="提额认证"/>
-                <el-option :value="1" label="后台修改"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item prop="type" label="类型：">
-              <el-select v-model="searchForm.type">
-                <el-option value="" label="全部"/>
-                <el-option :value="0" label="增加"/>
-                <el-option :value="1" label="减少"/>
-              </el-select>
-            </el-form-item>
+            <el-col :span="6">
+              <el-form-item prop="name" label="操作：" label-width="70px">
+                <el-select v-model="searchForm.name">
+                  <el-option value="" label="全部"/>
+                  <el-option :value="0" label="提额认证"/>
+                  <el-option :value="1" label="后台修改"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item prop="type" label="类型：" label-width="70px">
+                <el-select v-model="searchForm.type">
+                  <el-option value="" label="全部"/>
+                  <el-option :value="0" label="增加"/>
+                  <el-option :value="1" label="减少"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-form-item prop="name" label="提交时间：">
                 <el-date-picker
@@ -39,8 +43,9 @@
                   end-placeholder="结束日期"/>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
+              <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
             </el-col>
           </el-row>
@@ -114,6 +119,11 @@
         <el-table-column label="操作人" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.nickName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -201,23 +211,56 @@ export default {
     handleResetSearch() {
       this.searchForm = Object.assign({}, searchFormBase)
     },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        return v[j] || ''
-      }))
-    },
     handleExport() {
       this.downloadLoading = true
       this.$http.post('user/accountLog', {
         ...this.formatSearch()
       }).then((res) => {
         const list = res.data.list
-        const tHeader = ['用户ID', '用户姓名', '真实姓名', '总额度', '可借额度', '冻结金额']
-        const filterVal = ['userId', 'userName', 'realName', 'totalMoney', 'balance', 'freezeAmount']
-        const data = this.formatJson(filterVal, list)
+        const exportConfig = {
+          userId: {
+            name: '用户ID'
+          },
+          userName: {
+            name: '用户姓名'
+          },
+          realName: {
+            name: '真实姓名'
+          },
+          name: {
+            name: '操作',
+            format: this.formatQuotaNameString
+          },
+          type: {
+            name: '类型',
+            format: this.formatQuotaTypeString
+          },
+          amount: {
+            name: '操作金额'
+          },
+          totalMoney: {
+            name: '总额度'
+          },
+          balance: {
+            name: '可借额度'
+          },
+          freezeAmount: {
+            name: '冻结金额'
+          },
+          nickName: {
+            name: '操作人'
+          },
+          addTime: {
+            name: '时间'
+          },
+          remark: {
+            name: '备注'
+          }
+        }
+        const data = this.formatExport(exportConfig, list)
         excel.export_json_to_excel({
-          header: tHeader,
-          data,
+          header: data.tHeader,
+          data: data.data,
           filename: '用户额度流水列表',
           autoWidth: true,
           bookType: 'xlsx'

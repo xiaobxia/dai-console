@@ -33,8 +33,9 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
+              <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
               <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
             </el-col>
           </el-row>
@@ -49,39 +50,24 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="借款编号" align="center" width="80">
+        <el-table-column label="借款编号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.cno }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center">
+        <el-table-column label="用户" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.addTime }}</span>
+            <span>{{ scope.row.cashUser }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="开始时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.beginTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="申请次数" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.countApply }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="结束时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.endTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="放款时间" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.loanTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户手机号" align="center">
+        <el-table-column label="手机号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.mobile }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="借款总额" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.totalAmount }}</span>
           </template>
         </el-table-column>
         <el-table-column label="借款期限" align="center">
@@ -89,9 +75,9 @@
             <span>{{ scope.row.period }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="实际还款时间" align="center">
+        <el-table-column label="申请时间" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.repaidTime }}</span>
+            <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="借款状态" align="center">
@@ -99,17 +85,12 @@
             <span>{{ formatLoanState(scope.row.state) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="借款金额" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.totalAmount }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="170">
-          <!--<template slot-scope="scope">-->
-          <!--<el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>-->
-          <!--<el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>-->
-          <!--</template>-->
-        </el-table-column>
+        <!--<el-table-column label="操作" align="center" width="170">-->
+        <!--<template slot-scope="scope">-->
+        <!--<el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>-->
+        <!--<el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
@@ -148,6 +129,8 @@
 <script>
 import Pagination from '@/components/Pagination'
 import moment from 'moment'
+import excel from '@/vendor/Export2Excel'
+
 const dialogFormBase = {
   title: '',
   type: 0,
@@ -213,6 +196,7 @@ export default {
   components: { Pagination },
   data() {
     return {
+      downloadLoading: false,
       searchLoading: false,
       loading: false,
       listLoading: false,
@@ -368,6 +352,49 @@ export default {
         return loanState.name
       }
       return '未知'
+    },
+    handleExport() {
+      this.downloadLoading = true
+      this.$http.post('cashloan/cashlist', {
+        ...this.formatSearch()
+      }).then((res) => {
+        const list = res.data.list
+        const exportConfig = {
+          cno: {
+            name: '借款编号'
+          },
+          cashUser: {
+            name: '用户'
+          },
+          mobile: {
+            name: '手机号'
+          },
+          totalAmount: {
+            name: '借款总额'
+          },
+          period: {
+            name: '借款期限'
+          },
+          addTime: {
+            name: '申请时间'
+          },
+          state: {
+            name: '借款状态',
+            format: this.formatLoanState
+          }
+        }
+        const data = this.formatExport(exportConfig, list)
+        excel.export_json_to_excel({
+          header: data.tHeader,
+          data: data.data,
+          filename: '用户借款列表',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

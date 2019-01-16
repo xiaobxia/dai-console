@@ -225,7 +225,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '待还款列表',
+          filename: '待分配列表',
           autoWidth: true,
           bookType: 'xlsx'
         })

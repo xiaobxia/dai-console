@@ -10,13 +10,9 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // "/serviceBase": {
-      //   "target": "http://47.98.140.76:3010/"
-      //   // "target": "http://localhost:3010/"
-      // },
       "/xhb": {
-        "target": "http://139.196.88.8/"
-        // "target": "http://192.168.1.49/"
+        // "target": "http://139.196.88.8/"
+        "target": "http://192.168.1.49:8900/"
         // "target": "http://localhost:3010/"
       }
     },

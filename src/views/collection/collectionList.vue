@@ -28,7 +28,7 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="informList"
+        :data="collectionList"
         border
         fit
         highlight-current-row
@@ -38,9 +38,6 @@
           <template slot-scope="props">
             <el-form>
               <el-row :gutter="12">
-                <el-form-item label="内容：" style="margin: 0">
-                  <span class="value">  {{ props.row.content }}</span>
-                </el-form-item>
                 <el-form-item label="备注：" style="margin: 0">
                   <span class="value">  {{ props.row.mark }}</span>
                 </el-form-item>
@@ -53,30 +50,59 @@
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="标题" align="center">
+        <el-table-column label="订单ID" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.title }}</span>
+            <span>{{ scope.row.repaymentId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="类型" align="center">
+        <el-table-column label="借款人" align="center">
           <template slot-scope="scope">
-            <span>{{ formatType(scope.row) }}</span>
+            <span>{{ scope.row.cashUser }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="联系人" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.createTime }}</span>
+            <span>{{ scope.row.collectionName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="修改时间" align="center">
+        <el-table-column label="关系" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.updateTime }}</span>
+            <span>{{ scope.row.collectionRelation }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="170">
+        <el-table-column label="联系方式" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+            <span>{{ scope.row.collectionPhone }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="订单状态" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.state }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="催收类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatCollectionTypeString(scope.row.collectionType) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="承诺还款" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatComittedRepayment(scope.row.comittedRepayment) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="是否接通" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatIsConnect(scope.row.isConnect) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="催收时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.addTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="催收人" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.addUser }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -116,6 +142,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
+
 const dialogFormBase = {
   title: '',
   type: 0,
@@ -132,6 +159,7 @@ export default {
   components: { Pagination },
   data() {
     return {
+      downloadLoading: false,
       searchLoading: false,
       loading: false,
       listLoading: false,
@@ -143,7 +171,7 @@ export default {
         content: [{ required: true, message: '请输入公告内容', trigger: 'blur' }]
       },
       searchForm: Object.assign({}, searchFormBase),
-      informList: [],
+      collectionList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -171,7 +199,7 @@ export default {
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.informList = res.data.list
+        this.collectionList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {

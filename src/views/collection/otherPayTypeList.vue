@@ -18,8 +18,9 @@
               <el-form-item prop="payType" label="支付方式：" label-width="90px">
                 <el-select v-model="searchForm.payType" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option :value="0" label="微信支付"/>
-                  <el-option :value="1" label="支付宝支付"/>
+                  <el-option :value="0" label="银行支付"/>
+                  <el-option :value="1" label="微信支付"/>
+                  <el-option :value="2" label="支付宝支付"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -37,7 +38,7 @@
         </el-form>
         <div style="text-align: right">
           <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-          <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">通知财务</el-button>
+          <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
         </div>
       </div>
       <el-table
@@ -122,20 +123,22 @@
           <el-input v-model="dialogForm.payMobile"/>
         </el-form-item>
         <el-form-item prop="payType" label="支付方式：">
-          <el-select v-model="dialogForm.payType">
-            <el-option :value="0" label="微信支付"/>
-            <el-option :value="1" label="支付宝支付"/>
+          <el-select v-model="dialogForm.payType" style="width: 100%">
+            <el-option :value="0" label="银行支付"/>
+            <el-option :value="1" label="微信支付"/>
+            <el-option :value="2" label="支付宝支付"/>
           </el-select>
         </el-form-item>
-        <el-form-item prop="pay_cno" label="支付订单号：">
-          <el-input v-model="dialogForm.pay_cno"/>
+        <el-form-item prop="payCno" label="支付订单号：">
+          <el-input v-model="dialogForm.payCno"/>
         </el-form-item>
         <el-form-item prop="payMoney" label="支付金额：">
           <el-input v-model="dialogForm.payMoney"/>
         </el-form-item>
-        <el-form-item prop="pay_time" label="支付时间：">
+        <el-form-item prop="payTime" label="支付时间：">
           <el-date-picker
-            v-model="dialogForm.pay_time"
+            v-model="dialogForm.payTime"
+            style="width: 100%"
             type="datetime"
             placeholder="选择日期时间"/>
         </el-form-item>
@@ -157,8 +160,8 @@ const dialogFormBase = {
   repaymentId: '',
   payMobile: '',
   payType: 0,
-  pay_cno: '',
-  pay_time: '',
+  payCno: '',
+  payTime: '',
   payMoney: '',
   mark: ''
 }

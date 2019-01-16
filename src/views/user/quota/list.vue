@@ -80,15 +80,6 @@
         <el-form-item prop="amount" label="操作金额：">
           <el-input v-model="dialogForm.amount"/>
         </el-form-item>
-        <el-form-item prop="total" label="原账户总额：">
-          <el-input v-model="dialogForm.total"/>
-        </el-form-item>
-        <el-form-item prop="balance" label="原账户可用余额：">
-          <el-input v-model="dialogForm.balance"/>
-        </el-form-item>
-        <el-form-item prop="freezeAmount" label="冻结金额：">
-          <el-input v-model="dialogForm.freezeAmount"/>
-        </el-form-item>
         <el-form-item prop="remark" label="备注：">
           <el-input :autosize="{ minRows: 2}" v-model="dialogForm.remark" type="textarea"/>
         </el-form-item>

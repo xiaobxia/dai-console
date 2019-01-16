@@ -124,6 +124,30 @@ const format = {
         break
     }
     return text
+  },
+  formatQuotaNameString(state) {
+    let text = '未知'
+    switch (state) {
+      case '0':
+        text = '提额认证'
+        break
+      case '1':
+        text = '后台修改'
+        break
+    }
+    return text
+  },
+  formatQuotaTypeString(state) {
+    let text = '未知'
+    switch (state) {
+      case '0':
+        text = '增加 '
+        break
+      case '1':
+        text = '减少'
+        break
+    }
+    return text
   }
 }
 

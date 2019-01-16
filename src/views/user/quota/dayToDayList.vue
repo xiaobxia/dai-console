@@ -9,6 +9,25 @@
                 <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item prop="realName" label="真实姓名：">
+                <el-input v-model="searchForm.realName"/>
+              </el-form-item>
+            </el-col>
+            <el-form-item prop="name" label="操作：">
+              <el-select v-model="searchForm.name">
+                <el-option value="" label="全部"/>
+                <el-option :value="0" label="提额认证"/>
+                <el-option :value="1" label="后台修改"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="type" label="类型：">
+              <el-select v-model="searchForm.type">
+                <el-option value="" label="全部"/>
+                <el-option :value="0" label="增加"/>
+                <el-option :value="1" label="减少"/>
+              </el-select>
+            </el-form-item>
             <el-col :span="12">
               <el-form-item prop="name" label="提交时间：">
                 <el-date-picker
@@ -36,6 +55,17 @@
         highlight-current-row
         style="width: 100%;"
       >
+        <el-table-column type="expand" label="展开" width="80">
+          <template slot-scope="props">
+            <el-form>
+              <el-row :gutter="12">
+                <el-form-item label="备注：" style="margin: 0">
+                  <span class="value">  {{ props.row.remark }}</span>
+                </el-form-item>
+              </el-row>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column label="用户ID" align="center" width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.userId }}</span>
@@ -49,6 +79,21 @@
         <el-table-column label="真实姓名" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.realName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatQuotaNameString(scope.row.name) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ formatQuotaTypeString(scope.row.type) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作金额" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.amount }}</span>
           </template>
         </el-table-column>
         <el-table-column label="总额度" align="center">
@@ -66,6 +111,11 @@
             <span>{{ scope.row.freezeAmount }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作人" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.nickName }}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
@@ -79,6 +129,9 @@ import moment from 'moment'
 
 const searchFormBase = {
   userName: '',
+  realName: '',
+  name: '',
+  type: '',
   time: ['', '']
 }
 

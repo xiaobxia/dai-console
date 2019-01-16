@@ -128,7 +128,7 @@ import excel from '@/vendor/Export2Excel'
 
 import moment from 'moment'
 const searchFormBase = {
-  type: 1,
+  type: 0,
   cno: '',
   cashUser: '',
   mobile: '',

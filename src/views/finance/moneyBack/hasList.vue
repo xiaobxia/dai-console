@@ -86,7 +86,7 @@ import Pagination from '@/components/Pagination'
 import excel from '@/vendor/Export2Excel'
 
 const searchFormBase = {
-  type: 1,
+  type: 0,
   cno: '',
   collectionId: ''
 }

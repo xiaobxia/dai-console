@@ -18,9 +18,7 @@
               <el-form-item prop="payType" label="支付方式：" label-width="90px">
                 <el-select v-model="searchForm.payType" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option :value="0" label="银行支付"/>
-                  <el-option :value="1" label="微信支付"/>
-                  <el-option :value="2" label="支付宝支付"/>
+                  <el-option v-for="(item) in PAY_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -50,7 +48,7 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column type="expand" label="展开" width="70">
+        <el-table-column type="expand" label="展开" width="50">
           <template slot-scope="props">
             <el-form>
               <el-row :gutter="12">
@@ -124,9 +122,7 @@
         </el-form-item>
         <el-form-item prop="payType" label="支付方式：">
           <el-select v-model="dialogForm.payType" style="width: 100%">
-            <el-option :value="0" label="银行支付"/>
-            <el-option :value="1" label="微信支付"/>
-            <el-option :value="2" label="支付宝支付"/>
+            <el-option v-for="(item) in PAY_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="payCno" label="支付订单号：">

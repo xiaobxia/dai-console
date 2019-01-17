@@ -67,14 +67,12 @@
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="150px">
         <el-form-item prop="type" label="类型：">
           <el-select v-model="dialogForm.type">
-            <el-option :value="0" label="增加"/>
-            <el-option :value="1" label="减少"/>
+            <el-option v-for="(item) in QUOTA_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="name" label="名称：">
           <el-select v-model="dialogForm.name">
-            <el-option :value="0" label="提额认证"/>
-            <el-option :value="1" label="后台修改"/>
+            <el-option v-for="(item) in QUOTA_NAME" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="amount" label="操作金额：">

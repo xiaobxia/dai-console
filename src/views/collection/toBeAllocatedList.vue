@@ -23,9 +23,7 @@
               <el-form-item prop="backTime" label="还款时间：">
                 <el-select v-model="searchForm.backTime" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option value="0" label="今日"/>
-                  <el-option value="1" label="明日"/>
-                  <el-option value="2" label="后天"/>
+                  <el-option v-for="(item) in BACK_TIME" :key="item.number" :value="item.number" :label="item.label"/>
                 </el-select>
               </el-form-item>
             </el-col>

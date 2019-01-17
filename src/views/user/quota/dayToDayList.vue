@@ -18,8 +18,7 @@
               <el-form-item prop="name" label="操作：" label-width="70px">
                 <el-select v-model="searchForm.name">
                   <el-option value="" label="全部"/>
-                  <el-option :value="0" label="提额认证"/>
-                  <el-option :value="1" label="后台修改"/>
+                  <el-option v-for="(item) in QUOTA_NAME" :key="item.number" :value="item.number" :label="item.label"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -27,8 +26,7 @@
               <el-form-item prop="type" label="类型：" label-width="70px">
                 <el-select v-model="searchForm.type">
                   <el-option value="" label="全部"/>
-                  <el-option :value="0" label="增加"/>
-                  <el-option :value="1" label="减少"/>
+                  <el-option v-for="(item) in QUOTA_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -60,7 +58,7 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column type="expand" label="展开" width="80">
+        <el-table-column type="expand" label="展开" width="50">
           <template slot-scope="props">
             <el-form>
               <el-row :gutter="12">
@@ -88,12 +86,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <span>{{ formatQuotaNameString(scope.row.name) }}</span>
+            <span>{{ formatQuotaName(scope.row.name, true) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="类型" align="center">
           <template slot-scope="scope">
-            <span>{{ formatQuotaTypeString(scope.row.type) }}</span>
+            <span>{{ formatQuotaType(scope.row.type, true) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作金额" align="center">
@@ -229,11 +227,13 @@ export default {
           },
           name: {
             name: '操作',
-            format: this.formatQuotaNameString
+            format: this.formatQuotaName,
+            params: true
           },
           type: {
             name: '类型',
-            format: this.formatQuotaTypeString
+            format: this.formatQuotaType,
+            params: true
           },
           amount: {
             name: '操作金额'

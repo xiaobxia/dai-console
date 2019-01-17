@@ -2,19 +2,35 @@
   <div class="app-container">
     <el-card shadow="nerver">
       <div class="filter-container">
-        <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
+        <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="90px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="title" label="公告标题：">
-                <el-input v-model="searchForm.title"/>
+              <el-form-item prop="repaymentId" label="订单ID：">
+                <el-input v-model="searchForm.repaymentId"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="type" label="公告类型：">
-                <el-select v-model="searchForm.type" class="filter-item">
+              <el-form-item prop="collectionType" label="催收类型：">
+                <el-select v-model="searchForm.collectionType" class="filter-item">
                   <el-option label="全部" value=""/>
-                  <el-option :value="0" label="系统公告"/>
-                  <el-option :value="1" label="营销公告"/>
+                  <el-option v-for="(item) in COLLECTION_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item prop="comittedRepayment" label="承诺还款：">
+                <el-select v-model="searchForm.comittedRepayment" class="filter-item">
+                  <el-option label="全部" value=""/>
+                  <el-option :value="0" label="承诺"/>
+                  <el-option :value="1" label="未承诺"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item prop="isConnect" label="是否接通：">
+                <el-select v-model="searchForm.isConnect" class="filter-item">
+                  <el-option label="全部" value=""/>
+                  <el-option v-for="(item) in IS_CONNECT" :key="item.number" :value="item.number" :label="item.label"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -34,7 +50,7 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column type="expand" label="展开" width="80">
+        <el-table-column type="expand" label="展开" width="50">
           <template slot-scope="props">
             <el-form>
               <el-row :gutter="12">
@@ -82,7 +98,7 @@
         </el-table-column>
         <el-table-column label="催收类型" align="center">
           <template slot-scope="scope">
-            <span>{{ formatCollectionTypeString(scope.row.collectionType) }}</span>
+            <span>{{ formatCollectionType(scope.row.collectionType, true) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="承诺还款" align="center">
@@ -92,7 +108,7 @@
         </el-table-column>
         <el-table-column label="是否接通" align="center">
           <template slot-scope="scope">
-            <span>{{ formatIsConnect(scope.row.isConnect) }}</span>
+            <span>{{ formatIsConnect(scope.row.isConnect, true) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="催收时间" align="center" width="140">

@@ -62,7 +62,7 @@ Vue.prototype.formatExport = function(config, list) {
   }
   const data = list.map(v => filterVal.map(j => {
     if (config[j].format) {
-      return config[j].format(v[j])
+      return config[j].format(v[j], config[j].params)
     }
     return v[j] || ''
   }))

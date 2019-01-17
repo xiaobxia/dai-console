@@ -37,7 +37,7 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column type="expand" label="展开" width="80">
+        <el-table-column type="expand" label="展开" width="50">
           <template slot-scope="props">
             <el-form>
               <el-row :gutter="12">

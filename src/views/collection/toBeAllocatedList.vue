@@ -77,7 +77,7 @@
             <span>{{ scope.row.overdueinterest }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="应还时间" align="center">
+        <el-table-column label="应还时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.revertiableTime }}</span>
           </template>

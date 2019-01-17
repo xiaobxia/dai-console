@@ -75,7 +75,7 @@
             <span>{{ scope.row.period }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center">
+        <el-table-column label="申请时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.addTime }}</span>
           </template>

@@ -56,7 +56,7 @@
             <span>{{ scope.row.userName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="分配时间" align="center">
+        <el-table-column label="分配时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.allotTime }}</span>
           </template>

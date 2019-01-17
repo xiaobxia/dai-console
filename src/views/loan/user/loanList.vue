@@ -75,7 +75,7 @@
             <span>{{ scope.row.period }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请时间" align="center">
+        <el-table-column label="申请时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.addTime }}</span>
           </template>
@@ -83,6 +83,11 @@
         <el-table-column label="借款状态" align="center">
           <template slot-scope="scope">
             <span>{{ formatLoanState(scope.row.state) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="申请次数" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.countApply }}</span>
           </template>
         </el-table-column>
         <!--<el-table-column label="操作" align="center" width="170">-->

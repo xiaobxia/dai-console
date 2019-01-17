@@ -49,7 +49,7 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="初次拉黑时间" align="center">
+        <el-table-column label="初次拉黑时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -59,7 +59,7 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="最后拉黑时间" align="center">
+        <el-table-column label="最后拉黑时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>

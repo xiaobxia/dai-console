@@ -62,12 +62,12 @@
             <span>{{ scope.row.mobile }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="创建时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="修改时间" align="center">
+        <el-table-column label="修改时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.updateTime }}</span>
           </template>

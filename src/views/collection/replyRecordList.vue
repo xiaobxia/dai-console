@@ -96,7 +96,7 @@
             <span>{{ scope.row.repaidTotal }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="实际还款时间" align="center">
+        <el-table-column label="实际还款时间" align="center" width="140">
           <template slot-scope="scope">
             <span>{{ scope.row.repaidTime }}</span>
           </template>

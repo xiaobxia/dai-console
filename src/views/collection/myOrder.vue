@@ -231,7 +231,7 @@ export default {
         ...this.formatSearch()
       }).then((res) => {
         const list = res.data.list
-        const tHeader = ['订单id', '姓名', '手机号', '借款金额', '逾期罚息', '应还时间', '应还金额', '订单状态', '渠道来源']
+        const tHeader = ['订单id', '用户账号', '手机号', '借款金额', '逾期罚息', '应还时间', '应还金额', '订单状态', '渠道来源']
         const filterVal = ['repaymentId', 'userName', 'cashMobile', 'cashMoney', 'overdueinterest', 'revertiableTime', 'revertiableMoney', 'orderState', 'routeName']
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

@@ -5,7 +5,7 @@
         <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="90px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="userName" label="用户姓名：">
+              <el-form-item prop="userName" label="用户账号：">
                 <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
@@ -74,7 +74,7 @@
             <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用户姓名" align="center">
+        <el-table-column label="用户账号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }}</span>
           </template>
@@ -220,7 +220,7 @@ export default {
             name: '用户ID'
           },
           userName: {
-            name: '用户姓名'
+            name: '用户账号'
           },
           realName: {
             name: '真实姓名'

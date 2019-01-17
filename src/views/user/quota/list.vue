@@ -5,7 +5,7 @@
         <el-form ref="searchForm" :model="searchForm" label-position="left" label-width="90px">
           <el-row :gutter="12">
             <el-col :span="6">
-              <el-form-item prop="userName" label="用户姓名：">
+              <el-form-item prop="userName" label="用户账号：">
                 <el-input v-model="searchForm.userName"/>
               </el-form-item>
             </el-col>
@@ -30,7 +30,7 @@
             <span>{{ scope.row.userId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用户姓名" align="center">
+        <el-table-column label="用户账号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }}</span>
           </template>
@@ -207,7 +207,7 @@ export default {
         ...this.searchForm
       }).then((res) => {
         const list = res.data.list
-        const tHeader = ['用户ID', '用户姓名', '真实姓名', '总额度', '可借额度', '冻结金额']
+        const tHeader = ['用户ID', '用户账号', '真实姓名', '总额度', '可借额度', '冻结金额']
         const filterVal = ['userId', 'userName', 'realName', 'totalMoney', 'balance', 'freezeAmount']
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

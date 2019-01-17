@@ -10,7 +10,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item prop="username" label="用户姓名：">
+              <el-form-item prop="username" label="用户账号：">
                 <el-input v-model="searchForm.username"/>
               </el-form-item>
             </el-col>
@@ -49,7 +49,7 @@
             <span>{{ scope.row.repaymentId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" align="center">
+        <el-table-column label="用户账号" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }}</span>
           </template>
@@ -191,7 +191,7 @@ export default {
         ...this.formatSearch()
       }).then((res) => {
         const list = res.data.list
-        const tHeader = ['订单id', '姓名', '手机号', '借款金额', '逾期罚息', '应还时间', '应还金额', '订单状态', '渠道来源']
+        const tHeader = ['订单id', '用户账号', '手机号', '借款金额', '逾期罚息', '应还时间', '应还金额', '订单状态', '渠道来源']
         const filterVal = ['repaymentId', 'userName', 'cashMobile', 'cashMoney', 'overdueinterest', 'revertiableTime', 'revertiableMoney', 'orderState', 'routeName']
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

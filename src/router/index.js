@@ -655,7 +655,7 @@ export const asyncRouterMap = [
         name: 'FinanceMakeMoney',
         redirect: 'noredirect',
         meta: {
-          title: '打款管理',
+          title: '放款管理',
           isLeaf: 1,
           link: '/finance/makeMoney'
         },
@@ -665,7 +665,7 @@ export const asyncRouterMap = [
             component: () => import('@/views/finance/makeMoney/list'),
             name: 'FinanceMakeMoneyList',
             meta: {
-              title: '打款列表',
+              title: '放款列表',
               isLeaf: 2,
               link: '/finance/makeMoney/list'
             }
@@ -710,7 +710,7 @@ export const asyncRouterMap = [
         name: 'FinanceCutMoney',
         redirect: 'noredirect',
         meta: {
-          title: '放款管理',
+          title: '扣款管理',
           isLeaf: 1,
           link: '/finance/cutMoney'
         },
@@ -720,7 +720,7 @@ export const asyncRouterMap = [
             component: () => import('@/views/finance/cutMoney/list'),
             name: 'FinanceCutMoneyList',
             meta: {
-              title: '所有放款列表',
+              title: '扣款列表',
               isLeaf: 2,
               link: '/finance/cutMoney/list'
             }

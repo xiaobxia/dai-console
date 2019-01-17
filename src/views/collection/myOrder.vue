@@ -333,7 +333,7 @@ export default {
 
     },
     handleToUserAddressBook(row) {
-      this.$router.push({ name: 'CollectionUserAddressBook', query: { userId: row.cashId }})
+      this.$router.push({ name: 'CollectionUserAddressBook', query: { userId: row.cashId, repaymentId: row.repaymentId }})
     }
   }
 }

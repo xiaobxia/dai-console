@@ -35,31 +35,45 @@
             <span>{{ scope.row.addTime }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作" align="center" width="140">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="handleAddRecord(scope.row)">添加催收记录</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加公告':'修改公告'" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="110px">
-        <el-form-item prop="title" label="公告标题：">
-          <el-input v-model="dialogForm.title"/>
+    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '添加催收记录':''" @closed="handleCancel">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="130px">
+        <el-form-item prop="repaymentId" label="订单ID：">
+          <el-input v-model="dialogForm.repaymentId"/>
         </el-form-item>
-        <el-form-item prop="content" label="公告内容：">
-          <el-input :autosize="{ minRows: 2}" v-model="dialogForm.content" type="textarea"/>
-        </el-form-item>
-        <el-form-item prop="type" label="公告类型：">
-          <el-select v-model="dialogForm.type" class="filter-item">
-            <el-option :value="0" label="系统公告"/>
-            <el-option :value="1" label="营销公告"/>
+        <el-form-item prop="collectionType" label="催收类型：">
+          <el-select v-model="dialogForm.collectionType" style="width: 100%">
+            <el-option v-for="(item) in COLLECTION_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="!ifAddDialogForm" prop="isDel" label="是否删除：">
-          <el-select v-model="dialogForm.isDel" class="filter-item">
-            <el-option :value="0" label="未删除"/>
-            <el-option :value="1" label="已删除"/>
+        <el-form-item prop="comittedRepayment" label="承诺还款：">
+          <el-select v-model="dialogForm.comittedRepayment" style="width: 100%">
+            <el-option v-for="(item) in COMITTED_REPAYMENT" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
-        <el-form-item prop="mark" label="公告备注：">
-          <el-input v-model="dialogForm.mark"/>
+        <el-form-item prop="isConnect" label="是否接通：">
+          <el-select v-model="dialogForm.isConnect" style="width: 100%">
+            <el-option v-for="(item) in IS_CONNECT" :key="item.number" :value="item.number" :label="item.label"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="collectionName" label="催收联系人：">
+          <el-input v-model="dialogForm.collectionName"/>
+        </el-form-item>
+        <el-form-item prop="collectionPhone" label="催收联系人电话：">
+          <el-input v-model="dialogForm.collectionPhone"/>
+        </el-form-item>
+        <el-form-item prop="collectionRelation" label="与催收人关系：">
+          <el-input v-model="dialogForm.collectionRelation"/>
+        </el-form-item>
+        <el-form-item prop="mark" label="备注：">
+          <el-input :autosize="{ minRows: 2}" v-model="dialogForm.mark" type="textarea"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -73,9 +87,13 @@
 <script>
 import Pagination from '@/components/Pagination'
 const dialogFormBase = {
-  title: '',
-  type: 0,
-  content: '',
+  repaymentId: '',
+  collectionType: 0,
+  comittedRepayment: 0,
+  isConnect: 0,
+  collectionName: '',
+  collectionPhone: '',
+  collectionRelation: '',
   mark: ''
 }
 
@@ -90,8 +108,6 @@ export default {
       dialogFormStatus: 'add',
       dialogForm: Object.assign({}, dialogFormBase),
       dialogFormRules: {
-        title: [{ required: true, message: '请输入公告标题', trigger: 'blur' }],
-        content: [{ required: true, message: '请输入公告内容', trigger: 'blur' }]
       },
       userAddressList: [],
       listTotal: 0,
@@ -144,55 +160,24 @@ export default {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
     },
-    handleCreate() {
+    handleAddRecord(row) {
       this.dialogFormVisible = true
       this.dialogFormStatus = 'add'
+      this.dialogForm = Object.assign(dialogFormBase, {
+        repaymentId: this.query.repaymentId,
+        collectionName: row.name,
+        collectionPhone: row.phoneNumber
+      })
     },
     handleCancel() {
       this.closeForm()
-    },
-    handleEdit(row) {
-      this.dialogFormVisible = true
-      this.dialogFormStatus = 'edit'
-      this.dialogForm = {
-        title: row.title,
-        type: parseInt(row.type),
-        content: row.content,
-        mark: row.mark,
-        id: row.id,
-        isDel: parseInt(row.isDel)
-      }
-    },
-    handleDelete(row) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(`announcement/editAnnouncement`, {
-          id: row.id,
-          isDel: 1
-        }).then((res) => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.verifyAfterDelete()
-          this.initPage()
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
     },
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$http.post(
-            this.dialogFormStatus === 'add' ? 'announcement/addAnnouncement' : 'announcement/editAnnouncement',
+            this.dialogFormStatus === 'add' ? 'collection/addcollectionrecord' : '',
             this.dialogForm
           ).then(() => {
             this.loading = false

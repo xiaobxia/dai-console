@@ -108,13 +108,13 @@
           <el-input :autosize="{ minRows: 2}" v-model="dialogForm.content" type="textarea"/>
         </el-form-item>
         <el-form-item prop="type" label="借款类型：">
-          <el-select v-model="dialogForm.type" class="filter-item">
+          <el-select v-model="dialogForm.type">
             <el-option :value="0" label="系统借款"/>
             <el-option :value="1" label="营销借款"/>
           </el-select>
         </el-form-item>
         <el-form-item v-if="!ifAddDialogForm" prop="isDel" label="是否删除：">
-          <el-select v-model="dialogForm.isDel" class="filter-item">
+          <el-select v-model="dialogForm.isDel">
             <el-option :value="0" label="未删除"/>
             <el-option :value="1" label="已删除"/>
           </el-select>

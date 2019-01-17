@@ -94,6 +94,18 @@ const RZ = [
     label: '认证'
   }
 ]
+
+const COMITTED_REPAYMENT = [
+  {
+    number: 0,
+    label: '承诺'
+  },
+  {
+    number: 1,
+    label: '未承诺'
+  }
+]
+
 const format = {
   COLLECTION_TYPE,
   formatCollectionType(state, isStr) {
@@ -189,17 +201,16 @@ const format = {
     }
     return text
   },
-  formatComittedRepayment(state) {
-    let text = '未知'
-    switch (state) {
-      case '0':
-        text = '承诺'
-        break
-      case '1':
-        text = '未承诺'
-        break
-    }
-    return text
+  COMITTED_REPAYMENT,
+  formatComittedRepayment(state, isStr) {
+    const result = COMITTED_REPAYMENT.find((item) => {
+      if (isStr) {
+        return (item.text || '' + item.number) === state
+      } else {
+        return item.number === state
+      }
+    })
+    return (result && result.label) || '未知'
   },
   QUOTA_NAME,
   formatQuotaName(state, isStr) {

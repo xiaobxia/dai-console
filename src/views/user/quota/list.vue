@@ -64,14 +64,14 @@
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
     <el-dialog :visible.sync="dialogFormVisible" title="修改额度" @closed="handleCancel">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="150px">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="100px">
         <el-form-item prop="type" label="类型：">
-          <el-select v-model="dialogForm.type">
+          <el-select v-model="dialogForm.type" style="width: 100%">
             <el-option v-for="(item) in QUOTA_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
         <el-form-item prop="name" label="名称：">
-          <el-select v-model="dialogForm.name">
+          <el-select v-model="dialogForm.name" style="width: 100%">
             <el-option v-for="(item) in QUOTA_NAME" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>

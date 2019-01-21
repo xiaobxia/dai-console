@@ -35,7 +35,7 @@
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" width="140">
+        <el-table-column label="创建时间" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
           </template>

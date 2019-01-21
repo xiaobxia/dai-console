@@ -106,6 +106,32 @@ const COMITTED_REPAYMENT = [
   }
 ]
 
+const IS_CONFIRM = [
+  {
+    number: 0,
+    label: '审核通过'
+  },
+  {
+    number: 1,
+    label: '审核未通过'
+  },
+  {
+    number: 2,
+    label: '等待审核'
+  }
+]
+
+const IS_INFORM = [
+  {
+    number: 0,
+    label: '未通知'
+  },
+  {
+    number: 1,
+    label: '已通知'
+  }
+]
+
 const format = {
   COLLECTION_TYPE,
   formatCollectionType(state, isStr) {
@@ -174,32 +200,27 @@ const format = {
     }
     return text
   },
-  formatConfirm(state) {
-    let text = '未知'
-    switch (state) {
-      case 0:
-        text = '审核通过'
-        break
-      case 1:
-        text = '审核未通过'
-        break
-      case 2:
-        text = '等待审核'
-        break
-    }
-    return text
+  IS_CONFIRM,
+  formatISConfirm(state, isStr) {
+    const result = IS_CONFIRM.find((item) => {
+      if (isStr) {
+        return (item.text || '' + item.number) === state
+      } else {
+        return item.number === state
+      }
+    })
+    return (result && result.label) || '未知'
   },
-  formatInform(state) {
-    let text = '未知'
-    switch (state) {
-      case 0:
-        text = '未通知'
-        break
-      case 1:
-        text = '已通知'
-        break
-    }
-    return text
+  IS_INFORM,
+  formatIsInform(state, isStr) {
+    const result = IS_INFORM.find((item) => {
+      if (isStr) {
+        return (item.text || '' + item.number) === state
+      } else {
+        return item.number === state
+      }
+    })
+    return (result && result.label) || '未知'
   },
   COMITTED_REPAYMENT,
   formatComittedRepayment(state, isStr) {

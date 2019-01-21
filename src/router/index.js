@@ -791,6 +791,29 @@ export const asyncRouterMap = [
         ]
       },
       {
+        path: 'otherPayType',
+        component: () => import('@/views/finance/otherPayType/index'),
+        name: 'FinanceOtherPayType',
+        redirect: 'noredirect',
+        meta: {
+          title: '支付宝微信还款管理',
+          isLeaf: 1,
+          link: '/finance/otherPayType'
+        },
+        children: [
+          {
+            path: 'list',
+            component: () => import('@/views/finance/otherPayType/list'),
+            name: 'FinanceOtherPayTypeList',
+            meta: {
+              title: '支付宝微信还款列表',
+              isLeaf: 2,
+              link: '/finance/otherPayType/list'
+            }
+          }
+        ]
+      },
+      {
         path: 'thirdParty',
         component: () => import('@/views/finance/thirdParty/index'),
         name: 'FinanceThirdParty',

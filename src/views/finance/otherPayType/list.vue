@@ -34,7 +34,6 @@
         </el-form>
         <div style="text-align: right">
           <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-          <el-button class="filter-item" icon="el-icon-plus" type="primary" @click="handleCreate">新增</el-button>
         </div>
       </div>
       <el-table
@@ -92,11 +91,6 @@
             <span>{{ scope.row.payTime }}</span>
           </template>
         </el-table-column>
-        <!--<el-table-column label="通知财务" align="center">-->
-        <!--<template slot-scope="scope">-->
-        <!--<span>{{ formatIsInform(scope.row.isInform) }}</span>-->
-        <!--</template>-->
-        <!--</el-table-column>-->
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">
             <span>{{ formatISConfirm(scope.row.isConfirm) }}</span>
@@ -107,37 +101,28 @@
             <span>{{ scope.row.addUser }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作" align="center" width="80">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="handleApproval(scope.row)">审批</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
-    <el-dialog :visible.sync="dialogFormVisible" :title="ifAddDialogForm ? '通知财务':'修改公告'" @closed="handleCancel">
+    <el-dialog :visible.sync="dialogFormVisible" title="审批" @closed="handleCancel">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-position="right" label-width="110px">
         <el-form-item prop="repaymentId" label="订单id：">
           <el-input v-model="dialogForm.repaymentId"/>
-        </el-form-item>
-        <el-form-item prop="payMobile" label="支付手机号：">
-          <el-input v-model="dialogForm.payMobile"/>
         </el-form-item>
         <el-form-item prop="payType" label="支付方式：">
           <el-select v-model="dialogForm.payType" style="width: 100%">
             <el-option v-for="(item) in PAY_TYPE" :key="item.number" :value="item.number" :label="item.label"/>
           </el-select>
         </el-form-item>
-        <el-form-item prop="payCno" label="支付订单号：">
-          <el-input v-model="dialogForm.payCno"/>
-        </el-form-item>
-        <el-form-item prop="payMoney" label="支付金额：">
-          <el-input v-model="dialogForm.payMoney"/>
-        </el-form-item>
-        <el-form-item prop="payTime" label="支付时间：">
-          <el-date-picker
-            v-model="dialogForm.payTime"
-            style="width: 100%"
-            type="datetime"
-            placeholder="选择日期时间"/>
-        </el-form-item>
-        <el-form-item prop="mark" label="备注：">
-          <el-input :autosize="{ minRows: 2}" v-model="dialogForm.mark" type="textarea"/>
+        <el-form-item prop="isConfirm" label="审核状态：">
+          <el-select v-model="dialogForm.isConfirm" style="width: 100%">
+            <el-option v-for="(item) in IS_CONFIRM" :key="item.number" :value="item.number" :label="item.label"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -150,16 +135,12 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import moment from 'moment'
 
 const dialogFormBase = {
   repaymentId: '',
-  payMobile: '',
   payType: 0,
-  payCno: '',
-  payTime: '',
-  payMoney: '',
-  mark: ''
+  id: '',
+  isConfirm: ''
 }
 const searchFormBase = {
   repaymentId: '',
@@ -169,7 +150,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'CollectionOtherPayTypeList',
+  name: 'FinanceOtherPayTypeList',
   components: { Pagination },
   data() {
     return {
@@ -192,9 +173,6 @@ export default {
     }
   },
   computed: {
-    ifAddDialogForm() {
-      return this.dialogFormStatus === 'add'
-    }
   },
   created() {
     this.initPage()
@@ -231,54 +209,24 @@ export default {
         }
       }
     },
+    handleApproval(row) {
+      this.dialogFormVisible = true
+      this.dialogForm = this.copyKeys(dialogFormBase, row)
+    },
     closeForm() {
       this.dialogFormVisible = false
       this.dialogForm = Object.assign({}, dialogFormBase)
     },
-    handleCreate() {
-      this.dialogFormVisible = true
-      this.dialogFormStatus = 'add'
-    },
     handleCancel() {
       this.closeForm()
-    },
-    handleDelete(row) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post(``, {
-          id: row.id,
-          isDel: 1
-        }).then((res) => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.verifyAfterDelete()
-          this.initPage()
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
     },
     handleConfirm() {
       this.$refs.dialogForm.validate(valid => {
         if (valid) {
-          const postData = {
-            ...this.dialogForm
-          }
-          if (postData.payTime) {
-            postData.payTime = moment(postData.payTime).format('YYYY-MM-DD HH:mm:ss')
-          }
           this.loading = true
           this.$http.post(
-            this.dialogFormStatus === 'add' ? 'collection/informfinance' : '',
-            postData
+            this.dialogFormStatus === 'add' ? 'collection/approve' : '',
+            this.dialogForm
           ).then(() => {
             this.loading = false
             this.closeForm()

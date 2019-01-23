@@ -6,6 +6,7 @@ import Element from 'element-ui'
 import V_Echarts from 'vue-echarts-directive'
 import 'element-ui/lib/theme-chalk/index.css'
 import Http from '@/utils/httpUtil'
+import numberUtil from '@/utils/numberUtil'
 
 import '@/styles/index.scss' // global css
 
@@ -61,16 +62,26 @@ Vue.prototype.formatExport = function(config, list) {
     tHeader.push(config[key].name)
   }
   const data = list.map(v => filterVal.map(j => {
+    if (config[j].count) {
+      const params = []
+      config[j].countKeys.map((countKey) => {
+        params.push(v[countKey])
+      })
+      config[j].count(params)
+    }
     if (config[j].format) {
       return config[j].format(v[j], config[j].params)
     }
     return v[j] || ''
   }))
   return {
-    filterVal,
     tHeader,
     data
   }
+}
+
+for (const key in numberUtil) {
+  Vue.prototype[key] = numberUtil[key]
 }
 
 // register global utility filters.

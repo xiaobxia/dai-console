@@ -523,6 +523,39 @@ export const asyncRouterMap = [
           isLeaf: 2,
           link: '/collection/otherPayTypeList'
         }
+      },
+      {
+        path: 'statistics',
+        component: () => import('@/views/collection/statistics/index'),
+        name: 'CollectionStatistics',
+        redirect: 'noredirect',
+        meta: {
+          title: '催收统计',
+          isLeaf: 1,
+          link: '/collection/statistics'
+        },
+        children: [
+          {
+            path: 'chart',
+            component: () => import('@/views/collection/statistics/chart'),
+            name: 'CollectionStatisticsChart',
+            meta: {
+              title: '催回率图表',
+              isLeaf: 2,
+              link: '/collection/statistics/chart'
+            }
+          },
+          {
+            path: 'singleCollection',
+            component: () => import('@/views/collection/statistics/singleCollection'),
+            name: 'CollectionStatisticsSingleCollection',
+            meta: {
+              title: '个人催回量',
+              isLeaf: 2,
+              link: '/collection/statistics/singleCollection'
+            }
+          }
+        ]
       }
     ]
   },

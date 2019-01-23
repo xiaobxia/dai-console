@@ -11,9 +11,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/xhb": {
-        "target": "http://139.196.88.8/"
-        // "target": "http://192.168.1.49:8900/",
-        // pathRewrite: {'^/xhb':''}
+        // "target": "http://139.196.88.8/"
+        "target": "http://192.168.1.49:8900/",
+        pathRewrite: {'^/xhb':''}
         // "target": "http://localhost:3010/"
       }
     },

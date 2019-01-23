@@ -36,48 +36,48 @@
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="singleCollectionList"
+        :data="channelCollectionList"
         border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="ID" align="center" width="80">
+        <el-table-column label="渠道名称" align="center" width="80">
           <template slot-scope="scope">
-            <span>{{ scope.row.suId }}</span>
+            <span>{{ scope.row.routeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收员姓名" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.collectionName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="催收总数量" align="center">
+        <el-table-column label="渠道总数量" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.countCollection }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收还款数量" align="center">
+        <el-table-column label="渠道还款数量" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.countRepayment }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收展期数量" align="center">
+        <el-table-column label="渠道展期数量" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.countExtend }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收总金额" align="center">
+        <el-table-column label="渠道逾期数量" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.countCollection - scope.row.countRepayment }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道总金额" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.collectionMoney }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收还款金额" align="center">
+        <el-table-column label="渠道还款金额" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.repaymentMoney }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="催收展期金额" align="center">
+        <el-table-column label="渠道展期金额" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.extendMoney }}</span>
           </template>
@@ -92,14 +92,9 @@
             <span>{{ countRate(scope.row.countExtend, scope.row.countCollection) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="还款金额比" align="center">
+        <el-table-column label="逾期率" align="center">
           <template slot-scope="scope">
-            <span>{{ countRate(scope.row.repaymentMoney, scope.row.collectionMoney) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="展期金额比" align="center">
-          <template slot-scope="scope">
-            <span>{{ countRate(scope.row.extendMoney, scope.row.collectionMoney) }}</span>
+            <span>{{ countRate(scope.row.countCollection - scope.row.countRepayment, scope.row.countCollection) }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -119,7 +114,7 @@ const searchFormBase = {
 }
 
 export default {
-  name: 'CollectionStatisticsSingleCollection',
+  name: 'CollectionStatisticsChannelCollection',
   components: { Pagination },
   data() {
     return {
@@ -128,7 +123,7 @@ export default {
       loading: false,
       listLoading: false,
       searchForm: Object.assign({}, searchFormBase),
-      singleCollectionList: [],
+      channelCollectionList: [],
       listTotal: 0,
       paging: {
         pageNo: 1,
@@ -148,12 +143,12 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/singleCollection', {
-        ...this.formatSearch(),
+      this.$http.post('route/channelCollection', {
+        // ...this.formatSearch(),
         ...this.paging
       }).then((res) => {
         this.listLoading = false
-        this.singleCollectionList = res.data.list
+        this.channelCollectionList = res.data.list
         this.currentSize = res.data.list.length
         this.listTotal = res.data.total
       }).catch(() => {
@@ -186,34 +181,38 @@ export default {
     },
     handleExport() {
       this.downloadLoading = true
-      this.$http.post('collection/singleCollection', {
+      this.$http.post('route/channelCollection', {
         ...this.formatSearch()
       }).then((res) => {
         const list = res.data.list
         const exportConfig = {
-          suId: {
-            name: 'ID'
-          },
-          collectionName: {
-            name: '催收员姓名'
+          routeName: {
+            name: '渠道名称'
           },
           countCollection: {
-            name: '催收总数量'
+            name: '渠道总数量'
           },
           countRepayment: {
-            name: '催收还款数量'
+            name: '渠道还款数量'
           },
           countExtend: {
-            name: '催收展期数量'
+            name: '渠道展期数量'
+          },
+          '渠道逾期数量': {
+            name: '渠道逾期数量',
+            count: (params) => {
+              return params[1] - params[0]
+            },
+            countKeys: ['countRepayment', 'countCollection']
           },
           collectionMoney: {
-            name: '催收总金额'
+            name: '渠道总金额'
           },
           repaymentMoney: {
-            name: '催收还款金额'
+            name: '渠道还款金额'
           },
           extendMoney: {
-            name: '催收展期金额'
+            name: '渠道展期金额'
           },
           '还款率': {
             name: '还款率',
@@ -229,20 +228,12 @@ export default {
             },
             countKeys: ['countExtend', 'countCollection']
           },
-          '还款金额比': {
-            name: '还款金额比',
+          '逾期率': {
+            name: '逾期率',
             count: (params) => {
-              return this.countRate(params[0], params[1])
+              return this.countRate(params[1] - params[0], params[1])
             },
-            countKeys: ['repaymentMoney', 'collectionMoney']
-          },
-          '展期金额比': {
-            name: '展期金额比',
-            count: (params) => {
-              console.log(this.countRate(params[0], params[1]))
-              return this.countRate(params[0], params[1])
-            },
-            countKeys: ['extendMoney', 'collectionMoney']
+            countKeys: ['countRepayment', 'countCollection']
           }
         }
         const data = this.formatExport(exportConfig, list)

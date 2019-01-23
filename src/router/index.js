@@ -554,6 +554,26 @@ export const asyncRouterMap = [
               isLeaf: 2,
               link: '/collection/statistics/singleCollection'
             }
+          },
+          {
+            path: 'groupCollection',
+            component: () => import('@/views/collection/statistics/groupCollection'),
+            name: 'CollectionStatisticsGroupCollection',
+            meta: {
+              title: '小组催回量',
+              isLeaf: 2,
+              link: '/collection/statistics/groupCollection'
+            }
+          },
+          {
+            path: 'channelCollection',
+            component: () => import('@/views/collection/statistics/channelCollection'),
+            name: 'CollectionStatisticsChannelCollection',
+            meta: {
+              title: '催收渠道统计',
+              isLeaf: 2,
+              link: '/collection/statistics/channelCollection'
+            }
           }
         ]
       }

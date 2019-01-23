@@ -67,7 +67,7 @@ Vue.prototype.formatExport = function(config, list) {
       config[j].countKeys.map((countKey) => {
         params.push(v[countKey])
       })
-      config[j].count(params)
+      return config[j].count(params)
     }
     if (config[j].format) {
       return config[j].format(v[j], config[j].params)

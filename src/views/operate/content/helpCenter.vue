@@ -102,12 +102,6 @@
             <el-option value="4" label="其他问题"/>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="!ifAddDialogForm" prop="isDel" label="是否删除：">
-          <el-select v-model="dialogForm.isDel" class="filter-item">
-            <el-option :value="0" label="未删除"/>
-            <el-option :value="1" label="已删除"/>
-          </el-select>
-        </el-form-item>
         <el-form-item prop="mark" label="问题备注：">
           <el-input v-model="dialogForm.mark"/>
         </el-form-item>
@@ -217,8 +211,7 @@ export default {
         type: row.type,
         content: row.content,
         mark: row.mark,
-        id: row.id,
-        isDel: parseInt(row.isDel)
+        id: row.id
       }
     },
     handleDelete(row) {

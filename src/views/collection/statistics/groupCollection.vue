@@ -4,16 +4,6 @@
       <div class="filter-container">
         <el-form ref="searchForm" :model="searchForm" label-position="right" label-width="60px">
           <el-row :gutter="12">
-            <el-col :span="6">
-              <el-form-item prop="suId" label="ID：">
-                <el-input v-model="searchForm.suId"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item prop="collectionName" label="催收人昵称：" label-width="120px">
-                <el-input v-model="searchForm.collectionName"/>
-              </el-form-item>
-            </el-col>
             <el-col :span="12">
               <el-form-item prop="time" label="时间：">
                 <el-date-picker
@@ -25,33 +15,23 @@
                   end-placeholder="结束日期"/>
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
+              <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
+              <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
+            </el-col>
           </el-row>
         </el-form>
-        <div style="text-align: right">
-          <el-button class="filter-item" icon="el-icon-refresh" type="primary" @click="handleResetSearch">重置</el-button>
-          <el-button :loading="downloadLoading" class="filter-item" icon="el-icon-download" type="primary" @click="handleExport">导出</el-button>
-          <el-button :loading="searchLoading" class="filter-item" icon="el-icon-search" type="primary" @click="handleSearch">搜索</el-button>
-        </div>
       </div>
       <el-table
         v-loading="listLoading"
         key="id"
-        :data="singleCollectionList"
+        :data="groupCollectionList"
         border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="ID" align="center" width="80">
-          <template slot-scope="scope">
-            <span>{{ scope.row.suId }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="催收员姓名" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.collectionName }}</span>
-          </template>
-        </el-table-column>
         <el-table-column label="催收总数量" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.countCollection }}</span>
@@ -103,7 +83,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
     </el-card>
   </div>
 </template>
@@ -113,13 +92,11 @@ import Pagination from '@/components/Pagination'
 import moment from 'moment'
 import excel from '@/vendor/Export2Excel'
 const searchFormBase = {
-  suId: '',
-  collectionName: '',
   time: ['', '']
 }
 
 export default {
-  name: 'CollectionStatisticsSingleCollection',
+  name: 'CollectionStatisticsGroupCollection',
   components: { Pagination },
   data() {
     return {
@@ -128,13 +105,7 @@ export default {
       loading: false,
       listLoading: false,
       searchForm: Object.assign({}, searchFormBase),
-      singleCollectionList: [],
-      listTotal: 0,
-      paging: {
-        pageNo: 1,
-        pageSize: 10
-      },
-      currentSize: 0
+      groupCollectionList: []
     }
   },
   computed: {
@@ -148,14 +119,12 @@ export default {
     },
     queryList() {
       this.listLoading = true
-      this.$http.post('collection/singleCollection', {
-        ...this.formatSearch(),
-        ...this.paging
+      this.$http.post('collection/groupCollection', {
+        ...this.formatSearch()
       }).then((res) => {
+        console.log(res.data)
         this.listLoading = false
-        this.singleCollectionList = res.data.list
-        this.currentSize = res.data.list.length
-        this.listTotal = res.data.total
+        this.groupCollectionList = res.data
       }).catch(() => {
         this.listLoading = false
       })
@@ -175,7 +144,6 @@ export default {
       return data
     },
     resetPaging() {
-      this.paging.pageNo = 1
     },
     handleSearch() {
       this.resetPaging()
@@ -186,17 +154,11 @@ export default {
     },
     handleExport() {
       this.downloadLoading = true
-      this.$http.post('collection/singleCollection', {
+      this.$http.post('collection/groupCollection', {
         ...this.formatSearch()
       }).then((res) => {
-        const list = res.data.list
+        const list = res.data
         const exportConfig = {
-          suId: {
-            name: 'ID'
-          },
-          collectionName: {
-            name: '催收员姓名'
-          },
           countCollection: {
             name: '催收总数量'
           },
@@ -239,7 +201,6 @@ export default {
           '展期金额比': {
             name: '展期金额比',
             count: (params) => {
-              console.log(this.countRate(params[0], params[1]))
               return this.countRate(params[0], params[1])
             },
             countKeys: ['extendMoney', 'collectionMoney']

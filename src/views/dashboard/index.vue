@@ -1,82 +1,174 @@
 <template>
   <div class="app-container">
     <el-row :gutter="12">
-      <el-col :span="8">
+      <el-col :span="12">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>统计信息</span>
-            <span class="date">(2018-12-24)</span>
+            <span>今日统计量</span>
           </div>
-          <div class="data-wrap">
-            <div class="item">
-              <span class="title">注册人数</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">借款单数</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">放款单数</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">还款单数</span>
-              <span class="value">1</span>
-            </div>
-          </div>
+          <el-row :gutter="30">
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">注册人数</span>
+                  <span class="value">{{ todayData.countRegist }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">认证人数</span>
+                  <span class="value">{{ todayData.countIdentify }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">借款单数</span>
+                  <span class="value">{{ todayData.countCash }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款单数</span>
+                  <span class="value">{{ todayData.countCollection }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款单数</span>
+                  <span class="value">{{ todayData.countRepayment }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">展期单数</span>
+                  <span class="value">{{ todayData.countExtend }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期单数</span>
+                  <span class="value">{{ todayData.countOverdue }}</span>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">借款金额</span>
+                  <span class="value">{{ todayData.cashMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款金额</span>
+                  <span class="value">{{ todayData.collectionMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款金额</span>
+                  <span class="value">{{ todayData.repaymentMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">展期金额</span>
+                  <span class="value">{{ todayData.extendMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期金额</span>
+                  <span class="value">{{ todayData.overdueMoney }}</span>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">认证率</span>
+                  <span class="value">{{ countRate(todayData.countIdentify, todayData.countRegist) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款率</span>
+                  <span class="value">{{ countRate(todayData.countCollection, todayData.countCash) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款率</span>
+                  <span class="value">{{ countRate(todayData.countRepayment, todayData.countCollection) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期率</span>
+                  <span class="value">{{ countRate(todayData.countOverdue, todayData.countCollection) }}%</span>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="12">
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
-            <span>渠道信息</span>
-            <span class="date">(2018-12-24)</span>
+            <span>历史统计量</span>
           </div>
-          <div class="data-wrap">
-            <div class="item">
-              <span class="title">注册量</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">进件量</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">放款量</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">拒绝量</span>
-              <span class="value">1</span>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>历史信息</span>
-            <span class="date">(2018-12-24)</span>
-          </div>
-          <div class="data-wrap">
-            <div class="item">
-              <span class="title">历史放款总量(笔)</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">历史还款总量(笔)</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">待还总额(元)</span>
-              <span class="value">1</span>
-            </div>
-            <div class="item">
-              <span class="title">逾期未还总额(元)</span>
-              <span class="value">1</span>
-            </div>
-          </div>
+          <el-row :gutter="30">
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">注册人数</span>
+                  <span class="value">{{ todayData.countRegist }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">认证人数</span>
+                  <span class="value">{{ todayData.countIdentify }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">借款单数</span>
+                  <span class="value">{{ todayData.countCash }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款单数</span>
+                  <span class="value">{{ todayData.countCollection }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款单数</span>
+                  <span class="value">{{ todayData.countRepayment }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">展期单数</span>
+                  <span class="value">{{ todayData.countExtend }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期单数</span>
+                  <span class="value">{{ todayData.countOverdue }}</span>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">借款金额</span>
+                  <span class="value">{{ todayData.cashMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款金额</span>
+                  <span class="value">{{ todayData.collectionMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款金额</span>
+                  <span class="value">{{ todayData.repaymentMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">展期金额</span>
+                  <span class="value">{{ todayData.extendMoney }}</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期金额</span>
+                  <span class="value">{{ todayData.overdueMoney }}</span>
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="data-wrap">
+                <div class="item">
+                  <span class="title">认证率</span>
+                  <span class="value">{{ countRate(todayData.countIdentify, todayData.countRegist) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">放款率</span>
+                  <span class="value">{{ countRate(todayData.countCollection, todayData.countCash) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">还款率</span>
+                  <span class="value">{{ countRate(todayData.countRepayment, todayData.countCollection) }}%</span>
+                </div>
+                <div class="item">
+                  <span class="title">逾期率</span>
+                  <span class="value">{{ countRate(todayData.countOverdue, todayData.countCollection) }}%</span>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
         </el-card>
       </el-col>
     </el-row>
@@ -87,16 +179,34 @@
 </template>
 
 <script>
-
+import moment from 'moment'
 export default {
   name: 'Dashboard',
   components: { },
   data() {
     return {
+      todayData: {},
+      historyData: {},
+      turnoverList: []
     }
   },
   computed: {
     barChartOptions() {
+      const turnoverList = []
+      this.turnoverList.map((item) => {
+        turnoverList.push(item)
+      })
+      turnoverList.sort((a, b) => {
+        return moment(a.clickDate).isAfter(b.clickDate)
+      })
+      const xData = []
+      const yData = []
+      const yData2 = []
+      this.turnoverList.map((item) => {
+        xData.push(moment(item.clickDate).format('YYYY-MM-DD'))
+        yData.push(item.countStatistics)
+        yData2.push(item.sumStatistics)
+      })
       return {
         color: [
           '#19d4ae', '#5ab1ef', '#fa6e86',
@@ -106,7 +216,7 @@ export default {
           '#7ba3a8'
         ],
         title: {
-          text: '折线图堆叠'
+          text: '15天内进出金额统计'
         },
         tooltip: {
           trigger: 'axis'
@@ -122,7 +232,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+          data: xData,
           axisLine: {
             lineStyle: {
               color: '#888',
@@ -155,13 +265,13 @@ export default {
             name: '放款金额',
             type: 'line',
             stack: '总量',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: yData
           },
           {
             name: '还款金额',
             type: 'line',
             stack: '总量',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: yData2
           }
         ]
       }
@@ -175,9 +285,22 @@ export default {
       this.queryList()
     },
     queryList() {
-      // this.$http.get('index/test').then((res) => {
-      // }).catch(() => {
-      // })
+      this.$http.post('sys_index/StatisticsToday', {
+        type: 1
+      }).then((res) => {
+        this.todayData = res.data
+      }).catch(() => {
+      })
+      this.$http.post('sys_index/StatisticsToday', {
+        type: 0
+      }).then((res) => {
+        this.historyData = res.data
+      }).catch(() => {
+      })
+      this.$http.post('sys_index/turnoverList').then((res) => {
+        this.turnoverList = res.data
+      }).catch(() => {
+      })
     }
   }
 }

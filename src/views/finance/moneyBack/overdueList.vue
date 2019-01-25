@@ -84,7 +84,7 @@
         </el-table-column>
       </el-table>
       <pagination v-show="listTotal>0" :total="listTotal" :page.sync="paging.pageNo" :limit.sync="paging.pageSize" @pagination="queryList" />
-  </el-card></div></el-card>
+    </el-card>
   </div>
 </template>
 
